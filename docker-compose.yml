@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # 바우처 플랫폼 애플리케이션
+  voucher-platform:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
+      - DB_PATH=/app/database/voucher_platform.db
+    volumes:
+      - ./database:/app/database
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/programs', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Nginx 리버스 프록시 (선택사항)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - voucher-platform
+    restart: unless-stopped
+
+  # PostgreSQL 데이터베이스 (선택사항 - SQLite 대신 사용)
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=voucher_platform
+      - POSTGRES_USER=voucher_user
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-voucher_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    profiles:
+      - postgres
+
+volumes:
+  postgres_data:
