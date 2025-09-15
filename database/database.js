@@ -183,6 +183,10 @@ class Database {
             )`
         ];
 
+        // 테이블 생성 완료 카운터
+        let completedTables = 0;
+        const totalTables = tables.length;
+
         tables.forEach((sql, index) => {
             this.db.run(sql, (err) => {
                 if (err) {
@@ -190,11 +194,16 @@ class Database {
                 } else {
                     console.log(`✅ 테이블 ${index + 1} 생성 완료`);
                 }
+                
+                completedTables++;
+                
+                // 모든 테이블 생성이 완료되면 인덱스 생성
+                if (completedTables === totalTables) {
+                    console.log('📊 모든 테이블 생성 완료, 인덱스 생성 시작...');
+                    this.createIndexes();
+                }
             });
         });
-
-        // 인덱스 생성
-        this.createIndexes();
     }
 
     createIndexes() {
@@ -209,10 +218,21 @@ class Database {
             'CREATE INDEX IF NOT EXISTS idx_audit_logs_actor ON audit_logs(actor_id)'
         ];
 
-        indexes.forEach((sql) => {
+        let completedIndexes = 0;
+        const totalIndexes = indexes.length;
+
+        indexes.forEach((sql, index) => {
             this.db.run(sql, (err) => {
                 if (err) {
-                    console.error('인덱스 생성 오류:', err.message);
+                    console.error(`인덱스 생성 오류 (${index + 1}):`, err.message);
+                } else {
+                    console.log(`✅ 인덱스 ${index + 1} 생성 완료`);
+                }
+                
+                completedIndexes++;
+                
+                if (completedIndexes === totalIndexes) {
+                    console.log('🎉 데이터베이스 초기화 완료!');
                 }
             });
         });
