@@ -75,14 +75,14 @@ jobs:
       run: npm ci
       
     - name: Deploy to Railway
-      if: ${{ secrets.RAILWAY_TOKEN }}
+      if: ${{ secrets.RAILWAY_TOKEN != '' }}
       uses: railwayapp/railway-deploy@v1
       with:
         railway-token: ${{ secrets.RAILWAY_TOKEN }}
         service: voucher-platform
         
     - name: Skip Railway Deploy
-      if: ${{ !secrets.RAILWAY_TOKEN }}
+      if: ${{ secrets.RAILWAY_TOKEN == '' }}
       run: |
         echo "⚠️ Railway 토큰이 설정되지 않았습니다."
         echo "Railway 토큰을 GitHub Secrets에 추가하면 자동 배포됩니다."
