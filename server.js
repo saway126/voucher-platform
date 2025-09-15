@@ -13,10 +13,11 @@ const PORT = process.env.PORT || 3000;
 // 미들웨어 설정
 app.use(helmet({
     contentSecurityPolicy: {
+        useDefaults: true,
         directives: {
             defaultSrc: ["'self'"],
             styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
-            scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
             scriptSrcAttr: ["'unsafe-inline'"],
             imgSrc: ["'self'", "data:", "https:"],
             connectSrc: ["'self'"],
@@ -31,7 +32,11 @@ app.use(helmet({
 app.use(compression());
 app.use(morgan('combined'));
 app.use(cors({
-    origin: ['http://localhost:8000', 'http://localhost:3000'],
+    origin: [
+        'http://localhost:8000',
+        'http://localhost:3000',
+        'https://voucher-platform-production.up.railway.app'
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
