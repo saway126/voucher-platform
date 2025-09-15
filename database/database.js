@@ -27,182 +27,177 @@ class Database {
     }
 
     createTables() {
-        const tables = [
-            // 사용자 테이블
-            `CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                email TEXT UNIQUE NOT NULL,
-                password_hash TEXT NOT NULL,
-                name TEXT NOT NULL,
-                phone TEXT,
-                type TEXT NOT NULL DEFAULT 'individual',
-                birth_date TEXT,
-                gender TEXT,
-                address TEXT,
-                role TEXT NOT NULL DEFAULT 'applicant',
-                is_verified BOOLEAN DEFAULT FALSE,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            )`,
+        this.db.serialize(() => {
+            // 테이블 생성
+            const tables = [
+                // 사용자 테이블
+                `CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    email TEXT UNIQUE NOT NULL,
+                    password_hash TEXT NOT NULL,
+                    name TEXT NOT NULL,
+                    phone TEXT,
+                    type TEXT NOT NULL DEFAULT 'individual',
+                    birth_date TEXT,
+                    gender TEXT,
+                    address TEXT,
+                    role TEXT NOT NULL DEFAULT 'applicant',
+                    is_verified BOOLEAN DEFAULT FALSE,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )`,
 
-            // 사업 테이블
-            `CREATE TABLE IF NOT EXISTS programs (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                title TEXT NOT NULL,
-                description TEXT,
-                type TEXT NOT NULL DEFAULT 'announcement',
-                budget INTEGER NOT NULL DEFAULT 0,
-                max_applicants INTEGER,
-                application_start DATETIME,
-                application_end DATETIME,
-                review_start DATETIME,
-                review_end DATETIME,
-                announcement_date DATETIME,
-                eligibility_criteria TEXT,
-                status TEXT NOT NULL DEFAULT 'draft',
-                created_by INTEGER NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (created_by) REFERENCES users (id)
-            )`,
+                // 사업 테이블
+                `CREATE TABLE IF NOT EXISTS programs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    title TEXT NOT NULL,
+                    description TEXT,
+                    type TEXT NOT NULL DEFAULT 'announcement',
+                    budget INTEGER NOT NULL DEFAULT 0,
+                    max_applicants INTEGER,
+                    application_start DATETIME,
+                    application_end DATETIME,
+                    review_start DATETIME,
+                    review_end DATETIME,
+                    announcement_date DATETIME,
+                    eligibility_criteria TEXT,
+                    status TEXT NOT NULL DEFAULT 'draft',
+                    created_by INTEGER NOT NULL,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (created_by) REFERENCES users (id)
+                )`,
 
-            // 신청서 테이블
-            `CREATE TABLE IF NOT EXISTS applications (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                application_number TEXT UNIQUE NOT NULL,
-                applicant_id INTEGER NOT NULL,
-                program_id INTEGER NOT NULL,
-                form_data TEXT NOT NULL,
-                status TEXT NOT NULL DEFAULT 'submitted',
-                score REAL DEFAULT 0,
-                notes TEXT,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (applicant_id) REFERENCES users (id),
-                FOREIGN KEY (program_id) REFERENCES programs (id)
-            )`,
+                // 신청서 테이블
+                `CREATE TABLE IF NOT EXISTS applications (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    application_number TEXT UNIQUE NOT NULL,
+                    applicant_id INTEGER NOT NULL,
+                    program_id INTEGER NOT NULL,
+                    form_data TEXT NOT NULL,
+                    status TEXT NOT NULL DEFAULT 'submitted',
+                    score REAL DEFAULT 0,
+                    notes TEXT,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (applicant_id) REFERENCES users (id),
+                    FOREIGN KEY (program_id) REFERENCES programs (id)
+                )`,
 
-            // 심사 테이블
-            `CREATE TABLE IF NOT EXISTS reviews (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                application_id INTEGER NOT NULL,
-                reviewer_id INTEGER NOT NULL,
-                round INTEGER NOT NULL DEFAULT 1,
-                score REAL NOT NULL,
-                comment TEXT,
-                status TEXT NOT NULL DEFAULT 'pending',
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (application_id) REFERENCES applications (id),
-                FOREIGN KEY (reviewer_id) REFERENCES users (id)
-            )`,
+                // 심사 테이블
+                `CREATE TABLE IF NOT EXISTS reviews (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    application_id INTEGER NOT NULL,
+                    reviewer_id INTEGER NOT NULL,
+                    round INTEGER NOT NULL DEFAULT 1,
+                    score REAL NOT NULL,
+                    comment TEXT,
+                    status TEXT NOT NULL DEFAULT 'pending',
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (application_id) REFERENCES applications (id),
+                    FOREIGN KEY (reviewer_id) REFERENCES users (id)
+                )`,
 
-            // 배분 테이블
-            `CREATE TABLE IF NOT EXISTS allocations (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                program_id INTEGER NOT NULL,
-                allocation_rules TEXT NOT NULL,
-                allocation_result TEXT NOT NULL,
-                status TEXT NOT NULL DEFAULT 'draft',
-                confirmed_by INTEGER,
-                confirmed_at DATETIME,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (program_id) REFERENCES programs (id),
-                FOREIGN KEY (confirmed_by) REFERENCES users (id)
-            )`,
+                // 배분 테이블
+                `CREATE TABLE IF NOT EXISTS allocations (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    program_id INTEGER NOT NULL,
+                    allocation_rules TEXT NOT NULL,
+                    allocation_result TEXT NOT NULL,
+                    status TEXT NOT NULL DEFAULT 'draft',
+                    confirmed_by INTEGER,
+                    confirmed_at DATETIME,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (program_id) REFERENCES programs (id),
+                    FOREIGN KEY (confirmed_by) REFERENCES users (id)
+                )`,
 
-            // 바우처 테이블
-            `CREATE TABLE IF NOT EXISTS vouchers (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                code TEXT UNIQUE NOT NULL,
-                program_id INTEGER NOT NULL,
-                applicant_id INTEGER NOT NULL,
-                amount INTEGER NOT NULL,
-                balance INTEGER NOT NULL,
-                expiry_date DATETIME,
-                usage_limit INTEGER DEFAULT 1,
-                status TEXT NOT NULL DEFAULT 'active',
-                issued_by INTEGER NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (program_id) REFERENCES programs (id),
-                FOREIGN KEY (applicant_id) REFERENCES users (id),
-                FOREIGN KEY (issued_by) REFERENCES users (id)
-            )`,
+                // 바우처 테이블
+                `CREATE TABLE IF NOT EXISTS vouchers (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    code TEXT UNIQUE NOT NULL,
+                    program_id INTEGER NOT NULL,
+                    applicant_id INTEGER NOT NULL,
+                    amount INTEGER NOT NULL,
+                    balance INTEGER NOT NULL,
+                    expiry_date DATETIME,
+                    usage_limit INTEGER DEFAULT 1,
+                    status TEXT NOT NULL DEFAULT 'active',
+                    issued_by INTEGER NOT NULL,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (program_id) REFERENCES programs (id),
+                    FOREIGN KEY (applicant_id) REFERENCES users (id),
+                    FOREIGN KEY (issued_by) REFERENCES users (id)
+                )`,
 
-            // 바우처 사용 내역 테이블
-            `CREATE TABLE IF NOT EXISTS voucher_usage (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                voucher_id INTEGER NOT NULL,
-                amount INTEGER NOT NULL,
-                merchant_name TEXT,
-                usage_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (voucher_id) REFERENCES vouchers (id)
-            )`,
+                // 바우처 사용 내역 테이블
+                `CREATE TABLE IF NOT EXISTS voucher_usage (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    voucher_id INTEGER NOT NULL,
+                    amount INTEGER NOT NULL,
+                    merchant_name TEXT,
+                    usage_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (voucher_id) REFERENCES vouchers (id)
+                )`,
 
-            // 알림 테이블
-            `CREATE TABLE IF NOT EXISTS notifications (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                recipient_id INTEGER NOT NULL,
-                channel TEXT NOT NULL,
-                template TEXT NOT NULL,
-                content TEXT NOT NULL,
-                status TEXT NOT NULL DEFAULT 'pending',
-                sent_at DATETIME,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (recipient_id) REFERENCES users (id)
-            )`,
+                // 알림 테이블
+                `CREATE TABLE IF NOT EXISTS notifications (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    recipient_id INTEGER NOT NULL,
+                    channel TEXT NOT NULL,
+                    template TEXT NOT NULL,
+                    content TEXT NOT NULL,
+                    status TEXT NOT NULL DEFAULT 'pending',
+                    sent_at DATETIME,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (recipient_id) REFERENCES users (id)
+                )`,
 
-            // 파일 테이블
-            `CREATE TABLE IF NOT EXISTS files (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                filename TEXT NOT NULL,
-                original_name TEXT NOT NULL,
-                file_path TEXT NOT NULL,
-                file_size INTEGER NOT NULL,
-                mime_type TEXT NOT NULL,
-                owner_id INTEGER NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (owner_id) REFERENCES users (id)
-            )`,
+                // 파일 테이블
+                `CREATE TABLE IF NOT EXISTS files (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    filename TEXT NOT NULL,
+                    original_name TEXT NOT NULL,
+                    file_path TEXT NOT NULL,
+                    file_size INTEGER NOT NULL,
+                    mime_type TEXT NOT NULL,
+                    owner_id INTEGER NOT NULL,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (owner_id) REFERENCES users (id)
+                )`,
 
-            // 감사 로그 테이블
-            `CREATE TABLE IF NOT EXISTS audit_logs (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                actor_id INTEGER NOT NULL,
-                action TEXT NOT NULL,
-                target_type TEXT NOT NULL,
-                target_id INTEGER,
-                details TEXT,
-                ip_address TEXT,
-                user_agent TEXT,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (actor_id) REFERENCES users (id)
-            )`
-        ];
+                // 감사 로그 테이블
+                `CREATE TABLE IF NOT EXISTS audit_logs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    actor_id INTEGER NOT NULL,
+                    action TEXT NOT NULL,
+                    target_type TEXT NOT NULL,
+                    target_id INTEGER,
+                    details TEXT,
+                    ip_address TEXT,
+                    user_agent TEXT,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (actor_id) REFERENCES users (id)
+                )`
+            ];
 
-        // 테이블 생성 완료 카운터
-        let completedTables = 0;
-        const totalTables = tables.length;
-
-        tables.forEach((sql, index) => {
-            this.db.run(sql, (err) => {
-                if (err) {
-                    console.error(`테이블 생성 오류 (${index + 1}):`, err.message);
-                } else {
-                    console.log(`✅ 테이블 ${index + 1} 생성 완료`);
-                }
-                
-                completedTables++;
-                
-                // 모든 테이블 생성이 완료되면 인덱스 생성
-                if (completedTables === totalTables) {
-                    console.log('📊 모든 테이블 생성 완료, 인덱스 생성 시작...');
-                    this.createIndexes();
-                }
+            // 테이블 생성
+            tables.forEach((sql, index) => {
+                this.db.run(sql, (err) => {
+                    if (err) {
+                        console.error(`테이블 생성 오류 (${index + 1}):`, err.message);
+                    } else {
+                        console.log(`✅ 테이블 ${index + 1} 생성 완료`);
+                    }
+                });
             });
+
+            // 인덱스 생성 (테이블 생성 후 실행)
+            this.createIndexes();
         });
     }
 
@@ -218,9 +213,6 @@ class Database {
             'CREATE INDEX IF NOT EXISTS idx_audit_logs_actor ON audit_logs(actor_id)'
         ];
 
-        let completedIndexes = 0;
-        const totalIndexes = indexes.length;
-
         indexes.forEach((sql, index) => {
             this.db.run(sql, (err) => {
                 if (err) {
@@ -228,14 +220,10 @@ class Database {
                 } else {
                     console.log(`✅ 인덱스 ${index + 1} 생성 완료`);
                 }
-                
-                completedIndexes++;
-                
-                if (completedIndexes === totalIndexes) {
-                    console.log('🎉 데이터베이스 초기화 완료!');
-                }
             });
         });
+        
+        console.log('🎉 데이터베이스 초기화 완료!');
     }
 
     // 데이터베이스 연결 종료
