@@ -29,14 +29,19 @@ app.use(helmet({
 
 app.use(compression());
 app.use(morgan('combined'));
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:8000', 'http://localhost:3000'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Rate limiting
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15분
-    max: 100, // 최대 100 요청
+    max: 1000, // 최대 1000 요청 (테스트를 위해 증가)
     message: '너무 많은 요청이 발생했습니다. 잠시 후 다시 시도해주세요.',
     standardHeaders: true,
     legacyHeaders: false,

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>통합 테스트 - 바우처 플랫폼</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2E7D32;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-section h3 {
+            color: #2E7D32;
+            margin-top: 0;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .test-result.pass {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test-result.fail {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .test-result.loading {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            background-color: #2E7D32;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #1B5E20;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .api-response {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-indicator.online {
+            background-color: #28a745;
+        }
+        .status-indicator.offline {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 통합 테스트 - 바우처 플랫폼</h1>
+        
+        <div class="test-section">
+            <h3>서버 상태 확인</h3>
+            <div id="serverStatus">
+                <span class="status-indicator offline"></span>
+                <span>백엔드 서버 상태 확인 중...</span>
+            </div>
+            <button onclick="checkServerStatus()">서버 상태 확인</button>
+        </div>
+
+        <div class="test-section">
+            <h3>인증 API 테스트</h3>
+            <div id="authTestResults"></div>
+            <button onclick="testAuthAPI()">인증 API 테스트</button>
+        </div>
+
+        <div class="test-section">
+            <h3>프로그램 API 테스트</h3>
+            <div id="programTestResults"></div>
+            <button onclick="testProgramAPI()">프로그램 API 테스트</button>
+        </div>
+
+        <div class="test-section">
+            <h3>신청서 API 테스트</h3>
+            <div id="applicationTestResults"></div>
+            <button onclick="testApplicationAPI()">신청서 API 테스트</button>
+        </div>
+
+        <div class="test-section">
+            <h3>전체 통합 테스트</h3>
+            <div id="integrationTestResults"></div>
+            <button onclick="runIntegrationTest()">전체 통합 테스트 실행</button>
+        </div>
+    </div>
+
+    <script src="api-client.js"></script>
+    <script>
+        const apiClient = new ApiClient();
+        
+        // 서버 상태 확인
+        async function checkServerStatus() {
+            const statusElement = document.getElementById('serverStatus');
+            const indicator = statusElement.querySelector('.status-indicator');
+            const text = statusElement.querySelector('span:last-child');
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/programs');
+                if (response.ok) {
+                    indicator.className = 'status-indicator online';
+                    text.textContent = '백엔드 서버가 정상적으로 실행 중입니다.';
+                } else {
+                    indicator.className = 'status-indicator offline';
+                    text.textContent = `서버 응답 오류: ${response.status}`;
+                }
+            } catch (error) {
+                indicator.className = 'status-indicator offline';
+                text.textContent = `서버 연결 실패: ${error.message}`;
+            }
+        }
+
+        // 인증 API 테스트
+        async function testAuthAPI() {
+            const resultsElement = document.getElementById('authTestResults');
+            resultsElement.innerHTML = '<div class="test-result loading">인증 API 테스트 중...</div>';
+            
+            try {
+                // 회원가입 테스트
+                const registerData = {
+                    email: 'test@integration.com',
+                    password: 'testpassword123',
+                    name: '통합테스트사용자',
+                    type: 'individual',
+                    phone: '010-1234-5678'
+                };
+                
+                const registerResponse = await apiClient.register(registerData);
+                resultsElement.innerHTML += `<div class="test-result pass">✅ 회원가입 API 테스트 통과</div>`;
+                
+                // 로그인 테스트
+                const loginData = {
+                    email: 'test@integration.com',
+                    password: 'testpassword123'
+                };
+                
+                const loginResponse = await apiClient.login(loginData);
+                resultsElement.innerHTML += `<div class="test-result pass">✅ 로그인 API 테스트 통과</div>`;
+                
+                // 토큰 검증 테스트
+                const verifyResponse = await apiClient.verifyToken();
+                resultsElement.innerHTML += `<div class="test-result pass">✅ 토큰 검증 API 테스트 통과</div>`;
+                
+            } catch (error) {
+                resultsElement.innerHTML += `<div class="test-result fail">❌ 인증 API 테스트 실패: ${error.message}</div>`;
+            }
+        }
+
+        // 프로그램 API 테스트
+        async function testProgramAPI() {
+            const resultsElement = document.getElementById('programTestResults');
+            resultsElement.innerHTML = '<div class="test-result loading">프로그램 API 테스트 중...</div>';
+            
+            try {
+                const programs = await apiClient.getPrograms();
+                resultsElement.innerHTML += `<div class="test-result pass">✅ 프로그램 목록 조회 성공 (${programs.length}개)</div>`;
+                
+                if (programs.length > 0) {
+                    const program = programs[0];
+                    resultsElement.innerHTML += `<div class="api-response">${JSON.stringify(program, null, 2)}</div>`;
+                }
+                
+            } catch (error) {
+                resultsElement.innerHTML += `<div class="test-result fail">❌ 프로그램 API 테스트 실패: ${error.message}</div>`;
+            }
+        }
+
+        // 신청서 API 테스트
+        async function testApplicationAPI() {
+            const resultsElement = document.getElementById('applicationTestResults');
+            resultsElement.innerHTML = '<div class="test-result loading">신청서 API 테스트 중...</div>';
+            
+            try {
+                const applications = await apiClient.getApplications();
+                resultsElement.innerHTML += `<div class="test-result pass">✅ 신청서 목록 조회 성공 (${applications.length}개)</div>`;
+                
+                // 신청서 생성 테스트
+                const applicationData = {
+                    programId: 1,
+                    applicantId: 1,
+                    formData: {
+                        name: '테스트 신청자',
+                        email: 'test@example.com',
+                        phone: '010-1234-5678',
+                        purpose: '통합 테스트용 신청서'
+                    }
+                };
+                
+                const newApplication = await apiClient.createApplication(applicationData);
+                resultsElement.innerHTML += `<div class="test-result pass">✅ 신청서 생성 성공</div>`;
+                
+            } catch (error) {
+                resultsElement.innerHTML += `<div class="test-result fail">❌ 신청서 API 테스트 실패: ${error.message}</div>`;
+            }
+        }
+
+        // 전체 통합 테스트
+        async function runIntegrationTest() {
+            const resultsElement = document.getElementById('integrationTestResults');
+            resultsElement.innerHTML = '<div class="test-result loading">전체 통합 테스트 실행 중...</div>';
+            
+            let passedTests = 0;
+            let totalTests = 0;
+            
+            // 서버 상태 확인
+            totalTests++;
+            try {
+                await checkServerStatus();
+                const statusElement = document.getElementById('serverStatus');
+                const indicator = statusElement.querySelector('.status-indicator');
+                if (indicator.classList.contains('online')) {
+                    passedTests++;
+                    resultsElement.innerHTML += `<div class="test-result pass">✅ 서버 연결 테스트 통과</div>`;
+                } else {
+                    resultsElement.innerHTML += `<div class="test-result fail">❌ 서버 연결 테스트 실패</div>`;
+                }
+            } catch (error) {
+                resultsElement.innerHTML += `<div class="test-result fail">❌ 서버 연결 테스트 실패: ${error.message}</div>`;
+            }
+            
+            // API 테스트들
+            const testFunctions = [
+                { name: '인증 API', func: testAuthAPI },
+                { name: '프로그램 API', func: testProgramAPI },
+                { name: '신청서 API', func: testApplicationAPI }
+            ];
+            
+            for (const test of testFunctions) {
+                totalTests++;
+                try {
+                    await test.func();
+                    passedTests++;
+                    resultsElement.innerHTML += `<div class="test-result pass">✅ ${test.name} 통합 테스트 통과</div>`;
+                } catch (error) {
+                    resultsElement.innerHTML += `<div class="test-result fail">❌ ${test.name} 통합 테스트 실패: ${error.message}</div>`;
+                }
+            }
+            
+            // 최종 결과
+            const successRate = ((passedTests / totalTests) * 100).toFixed(1);
+            resultsElement.innerHTML += `<div class="test-result ${passedTests === totalTests ? 'pass' : 'fail'}">
+                📊 통합 테스트 완료: ${passedTests}/${totalTests} 통과 (${successRate}%)
+            </div>`;
+            
+            if (passedTests === totalTests) {
+                resultsElement.innerHTML += `<div class="test-result pass">🎉 모든 통합 테스트가 성공했습니다!</div>`;
+            } else {
+                resultsElement.innerHTML += `<div class="test-result fail">⚠️ 일부 테스트가 실패했습니다. 위의 결과를 확인해주세요.</div>`;
+            }
+        }
+
+        // 페이지 로드 시 서버 상태 확인
+        window.addEventListener('load', () => {
+            checkServerStatus();
+        });
+    </script>
+</body>
+</html>
