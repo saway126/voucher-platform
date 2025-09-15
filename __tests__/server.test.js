@@ -17,7 +17,9 @@ describe('Server Tests', () => {
     
     expect(response.body).toHaveProperty('success', true);
     expect(response.body).toHaveProperty('data');
-    expect(Array.isArray(response.body.data)).toBe(true);
+    expect(response.body.data).toHaveProperty('programs');
+    expect(Array.isArray(response.body.data.programs)).toBe(true);
+    expect(response.body.data).toHaveProperty('pagination');
   });
 
   test('GET /nonexistent should return 404', async () => {
