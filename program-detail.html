@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>바우처 사업 상세 - 기대플러스</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-text">기대플러스</div>
+                </div>
+                
+                <!-- 햄버거 메뉴 버튼 (모바일) -->
+                <button class="hamburger" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                
+                <!-- 데스크톱 네비게이션 -->
+                <nav class="nav desktop-nav">
+                    <ul>
+                        <li><a href="/">홈</a></li>
+                        <li><a href="/programs">바우처 사업</a></li>
+                        <li><a href="/apply">바우처 신청</a></li>
+                        <li><a href="/mypage">마이페이지</a></li>
+                        <li><a href="/support">고객지원</a></li>
+                    </ul>
+                </nav>
+                
+                <!-- 데스크톱 사용자 메뉴 -->
+                <div class="user-menu desktop-user-menu">
+                    <button class="btn-login" onclick="showLoginModal()">로그인</button>
+                    <button class="btn-register" onclick="showRegisterModal()">회원가입</button>
+                    <button class="btn-demo" onclick="demoLogin()">간편 로그인</button>
+                    <button class="btn-admin" onclick="showAdminPanel()" style="display: none;">관리자</button>
+                </div>
+            </div>
+            
+            <!-- 모바일 메뉴 -->
+            <div class="mobile-menu" id="mobileMenu">
+                <nav class="mobile-nav">
+                    <ul>
+                        <li><a href="/" onclick="closeMobileMenu()">홈</a></li>
+                        <li><a href="/programs" onclick="closeMobileMenu()">바우처 사업</a></li>
+                        <li><a href="/apply" onclick="closeMobileMenu()">바우처 신청</a></li>
+                        <li><a href="/mypage" onclick="closeMobileMenu()">마이페이지</a></li>
+                        <li><a href="/support" onclick="closeMobileMenu()">고객지원</a></li>
+                    </ul>
+                </nav>
+                <div class="mobile-user-menu">
+                    <button class="btn-login" onclick="showLoginModal(); closeMobileMenu();">로그인</button>
+                    <button class="btn-register" onclick="showRegisterModal(); closeMobileMenu();">회원가입</button>
+                    <button class="btn-demo" onclick="demoLogin(); closeMobileMenu();">간편 로그인</button>
+                    <button class="btn-admin" onclick="showAdminPanel(); closeMobileMenu();" style="display: none;">관리자</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- 바우처 사업 상세 섹션 -->
+        <section class="program-detail">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="/">홈</a> > <a href="/programs">바우처 사업</a> > <span id="programTitle">사업 상세</span>
+                </div>
+                
+                <div class="program-detail-content">
+                    <div class="program-header">
+                        <div class="program-category" id="programCategory">카테고리</div>
+                        <h1 id="programName">바우처 사업명</h1>
+                        <div class="program-status" id="programStatus">진행중</div>
+                    </div>
+                    
+                    <div class="program-info-grid">
+                        <div class="program-main-info">
+                            <div class="program-image">
+                                <img id="programImage" src="https://via.placeholder.com/600x400/2E7D32/ffffff?text=바우처+사업" alt="바우처 사업 이미지">
+                            </div>
+                            
+                            <div class="program-description">
+                                <h3>사업 개요</h3>
+                                <p id="programDescription">바우처 사업에 대한 상세한 설명이 여기에 표시됩니다.</p>
+                            </div>
+                            
+                            <div class="program-benefits">
+                                <h3>지원 혜택</h3>
+                                <ul id="programBenefits">
+                                    <li>최대 100만원 지원</li>
+                                    <li>교육비 100% 지원</li>
+                                    <li>자격증 취득 지원</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="program-sidebar">
+                            <div class="application-box">
+                                <h3>신청 정보</h3>
+                                <div class="info-item">
+                                    <span class="label">신청 기간:</span>
+                                    <span id="applicationPeriod">2024.01.01 ~ 2024.12.31</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">지원 금액:</span>
+                                    <span id="supportAmount">최대 100만원</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">대상자:</span>
+                                    <span id="targetAudience">일반인</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">신청 방법:</span>
+                                    <span id="applicationMethod">온라인 신청</span>
+                                </div>
+                                
+                                <div class="action-buttons">
+                                    <button class="btn-primary" onclick="applyProgram()">바우처 신청하기</button>
+                                    <button class="btn-secondary" onclick="addToWishlist()">관심사업 등록</button>
+                                </div>
+                            </div>
+                            
+                            <div class="program-stats">
+                                <h3>신청 현황</h3>
+                                <div class="stat-item">
+                                    <span class="stat-number" id="totalApplications">1,234</span>
+                                    <span class="stat-label">총 신청자</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number" id="remainingSlots">766</span>
+                                    <span class="stat-label">잔여 정원</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="program-details-tabs">
+                        <button class="tab-btn active" onclick="showDetailTab('eligibility')">지원 자격</button>
+                        <button class="tab-btn" onclick="showDetailTab('process')">신청 절차</button>
+                        <button class="tab-btn" onclick="showDetailTab('documents')">필요 서류</button>
+                        <button class="tab-btn" onclick="showDetailTab('faq')">자주 묻는 질문</button>
+                    </div>
+                    
+                    <div class="tab-content">
+                        <div id="eligibility-content" class="tab-panel active">
+                            <h3>지원 자격</h3>
+                            <ul>
+                                <li>만 18세 이상 성인</li>
+                                <li>소득 기준 충족</li>
+                                <li>관련 분야 경험 또는 관심</li>
+                                <li>교육 이수 의지</li>
+                            </ul>
+                        </div>
+                        
+                        <div id="process-content" class="tab-panel">
+                            <h3>신청 절차</h3>
+                            <ol>
+                                <li>온라인 신청서 작성</li>
+                                <li>필요 서류 제출</li>
+                                <li>심사 및 선발</li>
+                                <li>교육 참여</li>
+                                <li>바우처 지급</li>
+                            </ol>
+                        </div>
+                        
+                        <div id="documents-content" class="tab-panel">
+                            <h3>필요 서류</h3>
+                            <ul>
+                                <li>신분증 사본</li>
+                                <li>소득 증명서</li>
+                                <li>자기소개서</li>
+                                <li>지원 동기서</li>
+                            </ul>
+                        </div>
+                        
+                        <div id="faq-content" class="tab-panel">
+                            <h3>자주 묻는 질문</h3>
+                            <div class="faq-item">
+                                <h4>Q. 지원 금액은 언제 지급되나요?</h4>
+                                <p>A. 교육 완료 후 1개월 이내에 지급됩니다.</p>
+                            </div>
+                            <div class="faq-item">
+                                <h4>Q. 중도 포기 시 어떻게 되나요?</h4>
+                                <p>A. 중도 포기 시 지원 금액은 지급되지 않습니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>기대플러스</h3>
+                    <p>바우처 플랫폼으로 더 나은 미래를 만들어갑니다.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>바우처 사업</h4>
+                    <ul>
+                        <li><a href="/programs">전체 사업</a></li>
+                        <li><a href="/programs?category=education">교육 분야</a></li>
+                        <li><a href="/programs?category=healthcare">의료 분야</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>고객지원</h4>
+                    <ul>
+                        <li><a href="/support">자주 묻는 질문</a></li>
+                        <li><a href="/support/contact">문의하기</a></li>
+                        <li><a href="/support/guide">이용 가이드</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 기대플러스. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="api-client.js"></script>
+    <script src="script.js"></script>
+    <script src="enhanced-features.js"></script>
+    <script>
+        // 페이지 로드 시 프로그램 정보 로드
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProgramDetail();
+            initUserInterface();
+        });
+
+        // URL에서 프로그램 ID 추출
+        function getProgramId() {
+            const path = window.location.pathname;
+            const match = path.match(/\/programs\/(\d+)/);
+            return match ? match[1] : null;
+        }
+
+        // 프로그램 상세 정보 로드
+        async function loadProgramDetail() {
+            const programId = getProgramId();
+            if (!programId) {
+                console.error('프로그램 ID를 찾을 수 없습니다.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/programs/${programId}`);
+                if (!response.ok) {
+                    throw new Error('프로그램 정보를 불러올 수 없습니다.');
+                }
+                
+                const program = await response.json();
+                displayProgramDetail(program);
+            } catch (error) {
+                console.error('프로그램 정보 로드 실패:', error);
+                // 더미 데이터로 표시
+                displayDummyProgram();
+            }
+        }
+
+        // 프로그램 상세 정보 표시
+        function displayProgramDetail(program) {
+            document.getElementById('programTitle').textContent = program.name;
+            document.getElementById('programName').textContent = program.name;
+            document.getElementById('programCategory').textContent = program.category;
+            document.getElementById('programStatus').textContent = program.status;
+            document.getElementById('programDescription').textContent = program.description;
+            document.getElementById('applicationPeriod').textContent = `${program.startDate} ~ ${program.endDate}`;
+            document.getElementById('supportAmount').textContent = `최대 ${program.maxAmount}만원`;
+            document.getElementById('targetAudience').textContent = program.targetAudience;
+            document.getElementById('applicationMethod').textContent = program.applicationMethod;
+            document.getElementById('totalApplications').textContent = program.totalApplications || '0';
+            document.getElementById('remainingSlots').textContent = program.remainingSlots || '0';
+            
+            if (program.benefits && Array.isArray(program.benefits)) {
+                const benefitsList = document.getElementById('programBenefits');
+                benefitsList.innerHTML = program.benefits.map(benefit => `<li>${benefit}</li>`).join('');
+            }
+        }
+
+        // 더미 프로그램 데이터 표시
+        function displayDummyProgram() {
+            const dummyProgram = {
+                name: '디지털 스킬 업그레이드 바우처',
+                category: '교육',
+                status: '진행중',
+                description: '4차 산업혁명 시대에 필요한 디지털 스킬을 습득할 수 있는 바우처 사업입니다. 다양한 온라인 강의와 실습을 통해 실무에 바로 적용할 수 있는 기술을 배울 수 있습니다.',
+                startDate: '2024.01.01',
+                endDate: '2024.12.31',
+                maxAmount: 100,
+                targetAudience: '일반인',
+                applicationMethod: '온라인 신청',
+                totalApplications: 1234,
+                remainingSlots: 766,
+                benefits: [
+                    '최대 100만원 지원',
+                    '교육비 100% 지원',
+                    '자격증 취득 지원',
+                    '취업 연계 서비스'
+                ]
+            };
+            displayProgramDetail(dummyProgram);
+        }
+
+        // 바우처 신청
+        function applyProgram() {
+            const programId = getProgramId();
+            if (!programId) return;
+            
+            // 로그인 확인
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                alert('로그인이 필요합니다.');
+                showLoginModal();
+                return;
+            }
+            
+            // 신청 페이지로 이동
+            window.location.href = `/apply?program=${programId}`;
+        }
+
+        // 관심사업 등록
+        function addToWishlist() {
+            const programId = getProgramId();
+            if (!programId) return;
+            
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                alert('로그인이 필요합니다.');
+                showLoginModal();
+                return;
+            }
+            
+            // 관심사업 등록 로직
+            alert('관심사업으로 등록되었습니다.');
+        }
+
+        // 탭 전환
+        function showDetailTab(tabName) {
+            // 모든 탭 버튼 비활성화
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+            
+            // 선택된 탭 활성화
+            event.target.classList.add('active');
+            document.getElementById(`${tabName}-content`).classList.add('active');
+        }
+
+        // 사용자 인터페이스 초기화
+        function initUserInterface() {
+            try {
+                const currentUser = localStorage.getItem('currentUser');
+                if (currentUser) {
+                    const user = JSON.parse(currentUser);
+                    if (user && user.name) {
+                        updateUserInterface(user);
+                    }
+                }
+            } catch (error) {
+                console.warn('사용자 정보 로드 중 오류:', error);
+                localStorage.removeItem('currentUser');
+            }
+        }
+
+        // 사용자 인터페이스 업데이트
+        function updateUserInterface(user) {
+            if (!user || !user.name) {
+                console.warn('사용자 정보가 없습니다.');
+                return;
+            }
+            
+            const userMenu = document.querySelector('.user-menu');
+            if (userMenu) {
+                userMenu.innerHTML = `
+                    <span class="user-info">안녕하세요, ${user.name}님!</span>
+                    <button class="btn-logout" onclick="logout()">로그아웃</button>
+                    <button class="btn-admin" onclick="showAdminPanel()">관리자</button>
+                `;
+            }
+        }
+
+        // 로그아웃
+        function logout() {
+            localStorage.removeItem('currentUser');
+            location.reload();
+        }
+
+        // 모바일 메뉴 토글
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            if (mobileMenu.classList.contains('active')) {
+                closeMobileMenu();
+            } else {
+                mobileMenu.classList.add('active');
+                hamburger.classList.add('active');
+            }
+        }
+
+        // 모바일 메뉴 닫기
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            mobileMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+    </script>
+</body>
+</html>

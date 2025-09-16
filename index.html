@@ -4,11 +4,147 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>바우처 사업 온라인 통합 플랫폼</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎫</text></svg>">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="admin-styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <!-- 외부 리소스 제거 - 모바일 호환성을 위해 -->
+    <style>
+        /* 기본 폰트 설정 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        /* Font Awesome 아이콘 대체 */
+        .fas, .fa {
+            font-family: 'Arial', sans-serif;
+            font-style: normal;
+            font-weight: normal;
+        }
+        
+        .fa-phone:before { content: '📞'; }
+        .fa-envelope:before { content: '✉️'; }
+        .fa-question-circle:before { content: '❓'; }
+        .fa-bell:before { content: '🔔'; }
+        .fa-exclamation-triangle:before { content: '⚠️'; }
+        .fa-font:before { content: '📝'; }
+        .fa-hashtag:before { content: '#️⃣'; }
+        .fa-list:before { content: '📋'; }
+        .fa-align-left:before { content: '📄'; }
+        .fa-upload:before { content: '📤'; }
+        .fa-calendar:before { content: '📅'; }
+        
+        /* 모바일 최적화 */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: center;
+                padding: 10px;
+            }
+            
+            .nav ul {
+                flex-direction: column;
+                gap: 10px;
+                margin: 10px 0;
+            }
+            
+            .user-menu {
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 10px;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+            
+            .program-filters {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 5px;
+            }
+            
+            .filter-btn {
+                font-size: 14px;
+                padding: 8px 12px;
+            }
+            
+            .support-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .admin-tabs {
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+            
+            .admin-tab-btn {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .stat-card {
+                padding: 15px;
+            }
+            
+            .form-builder {
+                flex-direction: column;
+            }
+            
+            .element-list {
+                margin-bottom: 20px;
+            }
+            
+            .form-element {
+                margin: 5px 0;
+                padding: 10px;
+            }
+        }
+        
+        /* 터치 친화적 버튼 */
+        button, .btn-primary, .btn-secondary, .btn-small {
+            min-height: 44px;
+            min-width: 44px;
+            touch-action: manipulation;
+        }
+        
+        /* 모바일 폼 최적화 */
+        input, select, textarea {
+            font-size: 16px; /* iOS 줌 방지 */
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        /* 모바일 모달 최적화 */
+        .modal-content {
+            margin: 10px;
+            max-height: calc(100vh - 20px);
+            overflow-y: auto;
+        }
+        
+        /* 간편 로그인 버튼 스타일 */
+        .btn-demo {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .btn-demo:hover {
+            background: #e55a2b;
+        }
+    </style>
 </head>
 <body>
     <!-- 헤더 -->
@@ -18,7 +154,16 @@
                 <div class="logo">
                     <div class="logo-text">기대플러스</div>
                 </div>
-                <nav class="nav">
+                
+                <!-- 햄버거 메뉴 버튼 (모바일) -->
+                <button class="hamburger" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                
+                <!-- 데스크톱 네비게이션 -->
+                <nav class="nav desktop-nav">
                     <ul>
                         <li><a href="#home">홈</a></li>
                         <li><a href="#programs">바우처 사업</a></li>
@@ -27,10 +172,32 @@
                         <li><a href="#support">고객지원</a></li>
                     </ul>
                 </nav>
-                <div class="user-menu">
+                
+                <!-- 데스크톱 사용자 메뉴 -->
+                <div class="user-menu desktop-user-menu">
                     <button class="btn-login" onclick="showLoginModal()">로그인</button>
                     <button class="btn-register" onclick="showRegisterModal()">회원가입</button>
+                    <button class="btn-demo" onclick="demoLogin()">간편 로그인</button>
                     <button class="btn-admin" onclick="showAdminPanel()" style="display: none;">관리자</button>
+                </div>
+            </div>
+            
+            <!-- 모바일 메뉴 -->
+            <div class="mobile-menu" id="mobileMenu">
+                <nav class="mobile-nav">
+                    <ul>
+                        <li><a href="#home" onclick="closeMobileMenu()">홈</a></li>
+                        <li><a href="#programs" onclick="closeMobileMenu()">바우처 사업</a></li>
+                        <li><a href="#apply" onclick="closeMobileMenu()">바우처 신청</a></li>
+                        <li><a href="#manage" onclick="closeMobileMenu()">마이페이지</a></li>
+                        <li><a href="#support" onclick="closeMobileMenu()">고객지원</a></li>
+                    </ul>
+                </nav>
+                <div class="mobile-user-menu">
+                    <button class="btn-login" onclick="showLoginModal(); closeMobileMenu();">로그인</button>
+                    <button class="btn-register" onclick="showRegisterModal(); closeMobileMenu();">회원가입</button>
+                    <button class="btn-demo" onclick="demoLogin(); closeMobileMenu();">간편 로그인</button>
+                    <button class="btn-admin" onclick="showAdminPanel(); closeMobileMenu();" style="display: none;">관리자</button>
                 </div>
             </div>
         </div>
@@ -570,6 +737,168 @@
     <script src="enhanced-features.js"></script>
     <script src="admin-script.js"></script>
     <script src="test-runner.js"></script>
+    
+    <!-- 간단한 드래그 앤 드롭 기능 -->
+    <script>
+        // SortableJS 대체 기능
+        function initDragAndDrop() {
+            const elements = document.querySelectorAll('.form-element[draggable="true"]');
+            const canvas = document.getElementById('formCanvas');
+            
+            elements.forEach(element => {
+                element.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', e.target.dataset.type);
+                });
+            });
+            
+            if (canvas) {
+                canvas.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                });
+                
+                canvas.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    const elementType = e.dataTransfer.getData('text/plain');
+                    addFormElement(elementType);
+                });
+            }
+        }
+        
+        function addFormElement(type) {
+            const canvas = document.getElementById('formCanvas');
+            if (!canvas) return;
+            
+            const element = document.createElement('div');
+            element.className = 'form-field';
+            element.innerHTML = `
+                <label>${getElementLabel(type)}</label>
+                <input type="${getInputType(type)}" placeholder="${getPlaceholder(type)}">
+                <button onclick="this.parentElement.remove()">삭제</button>
+            `;
+            
+            canvas.appendChild(element);
+        }
+        
+        function getElementLabel(type) {
+            const labels = {
+                'text': '텍스트 입력',
+                'number': '숫자 입력',
+                'select': '선택 박스',
+                'textarea': '텍스트 영역',
+                'file': '파일 업로드',
+                'date': '날짜 선택'
+            };
+            return labels[type] || '입력 필드';
+        }
+        
+        function getInputType(type) {
+            const types = {
+                'text': 'text',
+                'number': 'number',
+                'select': 'text',
+                'textarea': 'text',
+                'file': 'file',
+                'date': 'date'
+            };
+            return types[type] || 'text';
+        }
+        
+        function getPlaceholder(type) {
+            const placeholders = {
+                'text': '텍스트를 입력하세요',
+                'number': '숫자를 입력하세요',
+                'select': '선택하세요',
+                'textarea': '내용을 입력하세요',
+                'file': '파일을 선택하세요',
+                'date': '날짜를 선택하세요'
+            };
+            return placeholders[type] || '입력하세요';
+        }
+        
+        // 간편 로그인 기능
+        function demoLogin() {
+            // 간편 로그인 처리
+            const demoUser = {
+                id: 'demo_user',
+                name: '데모 사용자',
+                email: 'demo@example.com',
+                role: 'user'
+            };
+            
+            // 로컬 스토리지에 사용자 정보 저장
+            localStorage.setItem('currentUser', JSON.stringify(demoUser));
+            
+            // UI 업데이트
+            updateUserInterface(demoUser);
+            
+            // 알림 표시
+            alert('간편 로그인 완료!\n데모 사용자로 로그인되었습니다.');
+        }
+        
+        function updateUserInterface(user) {
+            // 사용자 정보가 없으면 함수 종료
+            if (!user || !user.name) {
+                console.warn('사용자 정보가 없습니다.');
+                return;
+            }
+            
+            // 로그인 버튼들을 숨기고 사용자 메뉴 표시
+            const userMenu = document.querySelector('.user-menu');
+            if (userMenu) {
+                userMenu.innerHTML = `
+                    <span class="user-info">안녕하세요, ${user.name}님!</span>
+                    <button class="btn-logout" onclick="logout()">로그아웃</button>
+                    <button class="btn-admin" onclick="showAdminPanel()">관리자</button>
+                `;
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem('currentUser');
+            location.reload();
+        }
+        
+        // 모바일 메뉴 토글
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            if (mobileMenu.classList.contains('active')) {
+                closeMobileMenu();
+            } else {
+                mobileMenu.classList.add('active');
+                hamburger.classList.add('active');
+            }
+        }
+        
+        // 모바일 메뉴 닫기
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            mobileMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+        
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            initDragAndDrop();
+            
+            // 저장된 사용자 정보 확인
+            try {
+                const currentUser = localStorage.getItem('currentUser');
+                if (currentUser) {
+                    const user = JSON.parse(currentUser);
+                    if (user && user.name) {
+                        updateUserInterface(user);
+                    }
+                }
+            } catch (error) {
+                console.warn('사용자 정보 로드 중 오류:', error);
+                localStorage.removeItem('currentUser');
+            }
+        });
+    </script>
     <script>
         // 테스트 실행 함수들
         function runAllTests() {

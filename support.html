@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고객지원 - 기대플러스</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🆘</text></svg>">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-text">기대플러스</div>
+                </div>
+                
+                <!-- 햄버거 메뉴 버튼 (모바일) -->
+                <button class="hamburger" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                
+                <!-- 데스크톱 네비게이션 -->
+                <nav class="nav desktop-nav">
+                    <ul>
+                        <li><a href="/">홈</a></li>
+                        <li><a href="/programs">바우처 사업</a></li>
+                        <li><a href="/apply">바우처 신청</a></li>
+                        <li><a href="/mypage">마이페이지</a></li>
+                        <li><a href="/support" class="active">고객지원</a></li>
+                    </ul>
+                </nav>
+                
+                <!-- 데스크톱 사용자 메뉴 -->
+                <div class="user-menu desktop-user-menu">
+                    <button class="btn-login" onclick="showLoginModal()">로그인</button>
+                    <button class="btn-register" onclick="showRegisterModal()">회원가입</button>
+                    <button class="btn-demo" onclick="demoLogin()">간편 로그인</button>
+                    <button class="btn-admin" onclick="showAdminPanel()" style="display: none;">관리자</button>
+                </div>
+            </div>
+            
+            <!-- 모바일 메뉴 -->
+            <div class="mobile-menu" id="mobileMenu">
+                <nav class="mobile-nav">
+                    <ul>
+                        <li><a href="/" onclick="closeMobileMenu()">홈</a></li>
+                        <li><a href="/programs" onclick="closeMobileMenu()">바우처 사업</a></li>
+                        <li><a href="/apply" onclick="closeMobileMenu()">바우처 신청</a></li>
+                        <li><a href="/mypage" onclick="closeMobileMenu()">마이페이지</a></li>
+                        <li><a href="/support" onclick="closeMobileMenu()" class="active">고객지원</a></li>
+                    </ul>
+                </nav>
+                <div class="mobile-user-menu">
+                    <button class="btn-login" onclick="showLoginModal(); closeMobileMenu();">로그인</button>
+                    <button class="btn-register" onclick="showRegisterModal(); closeMobileMenu();">회원가입</button>
+                    <button class="btn-demo" onclick="demoLogin(); closeMobileMenu();">간편 로그인</button>
+                    <button class="btn-admin" onclick="showAdminPanel(); closeMobileMenu();" style="display: none;">관리자</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- 고객지원 섹션 -->
+        <section class="support-section">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="/">홈</a> > <span>고객지원</span>
+                </div>
+                
+                <div class="support-content">
+                    <div class="support-header">
+                        <h1>고객지원</h1>
+                        <p>궁금한 점이 있으시면 언제든 문의해주세요</p>
+                    </div>
+                    
+                    <div class="support-tabs">
+                        <button class="tab-btn active" onclick="showTab('faq')">자주 묻는 질문</button>
+                        <button class="tab-btn" onclick="showTab('contact')">문의하기</button>
+                        <button class="tab-btn" onclick="showTab('guide')">이용 가이드</button>
+                        <button class="tab-btn" onclick="showTab('notice')">공지사항</button>
+                    </div>
+                    
+                    <!-- 자주 묻는 질문 탭 -->
+                    <div class="tab-content active" id="faq-content">
+                        <div class="faq-search">
+                            <input type="text" id="faqSearch" placeholder="궁금한 내용을 검색해보세요..." onkeyup="searchFAQ()">
+                            <button class="btn-primary" onclick="searchFAQ()">검색</button>
+                        </div>
+                        
+                        <div class="faq-categories">
+                            <button class="category-btn active" onclick="filterFAQ('all')">전체</button>
+                            <button class="category-btn" onclick="filterFAQ('account')">계정 관련</button>
+                            <button class="category-btn" onclick="filterFAQ('application')">신청 관련</button>
+                            <button class="category-btn" onclick="filterFAQ('voucher')">바우처 관련</button>
+                            <button class="category-btn" onclick="filterFAQ('payment')">결제 관련</button>
+                        </div>
+                        
+                        <div class="faq-list" id="faqList">
+                            <!-- FAQ 항목들이 여기에 동적으로 생성됩니다 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 문의하기 탭 -->
+                    <div class="tab-content" id="contact-content">
+                        <div class="contact-form">
+                            <h3>문의하기</h3>
+                            <form id="contactForm">
+                                <div class="form-group">
+                                    <label for="contactCategory">문의 유형 *</label>
+                                    <select id="contactCategory" name="category" required>
+                                        <option value="">선택하세요</option>
+                                        <option value="account">계정 관련</option>
+                                        <option value="application">신청 관련</option>
+                                        <option value="voucher">바우처 관련</option>
+                                        <option value="payment">결제 관련</option>
+                                        <option value="technical">기술적 문제</option>
+                                        <option value="other">기타</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="contactTitle">제목 *</label>
+                                    <input type="text" id="contactTitle" name="title" required placeholder="문의 제목을 입력해주세요">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="contactMessage">문의 내용 *</label>
+                                    <textarea id="contactMessage" name="message" rows="8" required placeholder="문의하실 내용을 자세히 작성해주세요"></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="contactEmail">답변 받을 이메일 *</label>
+                                    <input type="email" id="contactEmail" name="email" required placeholder="답변을 받을 이메일 주소">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="contactPhone">연락처</label>
+                                    <input type="tel" id="contactPhone" name="phone" placeholder="긴급한 경우 연락받을 번호">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" id="contactAgree" required>
+                                        개인정보 수집 및 이용에 동의합니다. *
+                                    </label>
+                                </div>
+                                
+                                <button type="submit" class="btn-primary">문의하기</button>
+                            </form>
+                        </div>
+                        
+                        <div class="contact-info">
+                            <h3>연락처 정보</h3>
+                            <div class="contact-methods">
+                                <div class="contact-method">
+                                    <h4>📞 전화 문의</h4>
+                                    <p>1588-0000</p>
+                                    <p>평일 09:00 ~ 18:00</p>
+                                </div>
+                                <div class="contact-method">
+                                    <h4>📧 이메일 문의</h4>
+                                    <p>support@gidaplus.com</p>
+                                    <p>24시간 접수 가능</p>
+                                </div>
+                                <div class="contact-method">
+                                    <h4>💬 카카오톡 문의</h4>
+                                    <p>@기대플러스</p>
+                                    <p>평일 09:00 ~ 18:00</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 이용 가이드 탭 -->
+                    <div class="tab-content" id="guide-content">
+                        <div class="guide-sections">
+                            <div class="guide-section">
+                                <h3>📋 바우처 신청 가이드</h3>
+                                <div class="guide-steps">
+                                    <div class="guide-step">
+                                        <div class="step-number">1</div>
+                                        <div class="step-content">
+                                            <h4>회원가입</h4>
+                                            <p>기대플러스에 회원가입을 진행합니다.</p>
+                                        </div>
+                                    </div>
+                                    <div class="guide-step">
+                                        <div class="step-number">2</div>
+                                        <div class="step-content">
+                                            <h4>사업 선택</h4>
+                                            <p>원하는 바우처 사업을 선택합니다.</p>
+                                        </div>
+                                    </div>
+                                    <div class="guide-step">
+                                        <div class="step-number">3</div>
+                                        <div class="step-content">
+                                            <h4>신청서 작성</h4>
+                                            <p>필요한 정보를 입력하고 신청서를 작성합니다.</p>
+                                        </div>
+                                    </div>
+                                    <div class="guide-step">
+                                        <div class="step-number">4</div>
+                                        <div class="step-content">
+                                            <h4>서류 제출</h4>
+                                            <p>필요한 서류를 업로드하여 제출합니다.</p>
+                                        </div>
+                                    </div>
+                                    <div class="guide-step">
+                                        <div class="step-number">5</div>
+                                        <div class="step-content">
+                                            <h4>심사 및 승인</h4>
+                                            <p>심사 후 승인되면 바우처가 발급됩니다.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="guide-section">
+                                <h3>💳 바우처 사용 가이드</h3>
+                                <div class="guide-content">
+                                    <h4>바우처 사용 방법</h4>
+                                    <ol>
+                                        <li>마이페이지에서 발급받은 바우처를 확인합니다.</li>
+                                        <li>바우처 사용 가능한 업체를 찾습니다.</li>
+                                        <li>업체에서 바우처를 제시하고 서비스를 이용합니다.</li>
+                                        <li>바우처 금액만큼 할인받아 결제합니다.</li>
+                                    </ol>
+                                    
+                                    <h4>주의사항</h4>
+                                    <ul>
+                                        <li>바우처는 만료일 전까지 사용해야 합니다.</li>
+                                        <li>일부 업체에서는 바우처 사용이 제한될 수 있습니다.</li>
+                                        <li>바우처 사용 후 환불은 불가능합니다.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="guide-section">
+                                <h3>🔧 기술 지원</h3>
+                                <div class="guide-content">
+                                    <h4>브라우저 호환성</h4>
+                                    <p>다음 브라우저에서 최적화되어 있습니다:</p>
+                                    <ul>
+                                        <li>Chrome 90 이상</li>
+                                        <li>Firefox 88 이상</li>
+                                        <li>Safari 14 이상</li>
+                                        <li>Edge 90 이상</li>
+                                    </ul>
+                                    
+                                    <h4>모바일 앱</h4>
+                                    <p>모바일에서는 반응형 웹으로 제공됩니다. 별도 앱 설치가 필요하지 않습니다.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 공지사항 탭 -->
+                    <div class="tab-content" id="notice-content">
+                        <div class="notice-list" id="noticeList">
+                            <!-- 공지사항 목록이 여기에 동적으로 생성됩니다 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>기대플러스</h3>
+                    <p>바우처 플랫폼으로 더 나은 미래를 만들어갑니다.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>바우처 사업</h4>
+                    <ul>
+                        <li><a href="/programs">전체 사업</a></li>
+                        <li><a href="/programs?category=education">교육 분야</a></li>
+                        <li><a href="/programs?category=healthcare">의료 분야</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>고객지원</h4>
+                    <ul>
+                        <li><a href="/support">자주 묻는 질문</a></li>
+                        <li><a href="/support/contact">문의하기</a></li>
+                        <li><a href="/support/guide">이용 가이드</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 기대플러스. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="api-client.js"></script>
+    <script src="script.js"></script>
+    <script src="enhanced-features.js"></script>
+    <script>
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFAQ();
+            loadNotices();
+            initUserInterface();
+            setupContactForm();
+        });
+
+        // FAQ 데이터 로드
+        function loadFAQ() {
+            const dummyFAQ = [
+                {
+                    id: 1,
+                    category: 'account',
+                    question: '회원가입은 어떻게 하나요?',
+                    answer: '홈페이지 우측 상단의 "회원가입" 버튼을 클릭하여 이메일과 비밀번호를 입력하면 됩니다.',
+                    views: 1250
+                },
+                {
+                    id: 2,
+                    category: 'application',
+                    question: '바우처 신청은 언제까지 가능한가요?',
+                    answer: '각 바우처 사업마다 신청 기간이 다릅니다. 사업 상세 페이지에서 신청 기간을 확인하실 수 있습니다.',
+                    views: 980
+                },
+                {
+                    id: 3,
+                    category: 'voucher',
+                    question: '바우처는 어떻게 사용하나요?',
+                    answer: '마이페이지에서 발급받은 바우처를 확인하고, 바우처 사용 가능한 업체에서 서비스 이용 시 제시하면 됩니다.',
+                    views: 2100
+                },
+                {
+                    id: 4,
+                    category: 'payment',
+                    question: '바우처 사용 시 추가 결제가 필요한가요?',
+                    answer: '바우처 금액을 초과하는 부분에 대해서만 추가 결제가 필요합니다.',
+                    views: 750
+                },
+                {
+                    id: 5,
+                    category: 'account',
+                    question: '비밀번호를 잊어버렸어요.',
+                    answer: '로그인 페이지에서 "비밀번호 찾기"를 클릭하여 이메일로 재설정 링크를 받으실 수 있습니다.',
+                    views: 650
+                },
+                {
+                    id: 6,
+                    category: 'application',
+                    question: '신청 후 취소할 수 있나요?',
+                    answer: '심사 전까지는 신청 취소가 가능합니다. 마이페이지에서 신청 내역을 확인하고 취소할 수 있습니다.',
+                    views: 420
+                }
+            ];
+            
+            displayFAQ(dummyFAQ);
+        }
+
+        // FAQ 표시
+        function displayFAQ(faqList) {
+            const container = document.getElementById('faqList');
+            container.innerHTML = faqList.map(faq => `
+                <div class="faq-item" data-category="${faq.category}">
+                    <div class="faq-question" onclick="toggleFAQ(${faq.id})">
+                        <h4>${faq.question}</h4>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer" id="faq-answer-${faq.id}">
+                        <p>${faq.answer}</p>
+                        <div class="faq-meta">
+                            <span>조회수: ${faq.views}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // FAQ 토글
+        function toggleFAQ(faqId) {
+            const answer = document.getElementById(`faq-answer-${faqId}`);
+            const toggle = answer.previousElementSibling.querySelector('.faq-toggle');
+            
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+                toggle.textContent = '+';
+            } else {
+                answer.style.display = 'block';
+                toggle.textContent = '-';
+            }
+        }
+
+        // FAQ 검색
+        function searchFAQ() {
+            const searchTerm = document.getElementById('faqSearch').value.toLowerCase();
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('h4').textContent.toLowerCase();
+                const answer = item.querySelector('p').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // FAQ 카테고리 필터
+        function filterFAQ(category) {
+            // 모든 카테고리 버튼 비활성화
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            // 선택된 카테고리 버튼 활성화
+            event.target.classList.add('active');
+            
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                if (category === 'all' || item.dataset.category === category) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // 공지사항 로드
+        function loadNotices() {
+            const dummyNotices = [
+                {
+                    id: 1,
+                    title: '2024년 1분기 바우처 사업 안내',
+                    content: '2024년 1분기에 진행되는 새로운 바우처 사업들을 안내드립니다.',
+                    date: '2024-01-15',
+                    isImportant: true
+                },
+                {
+                    id: 2,
+                    title: '시스템 점검 안내',
+                    content: '더 나은 서비스 제공을 위해 시스템 점검을 진행합니다.',
+                    date: '2024-01-10',
+                    isImportant: false
+                },
+                {
+                    id: 3,
+                    title: '바우처 사용 가이드 업데이트',
+                    content: '바우처 사용 방법이 업데이트되었습니다. 자세한 내용은 이용 가이드를 확인해주세요.',
+                    date: '2024-01-05',
+                    isImportant: false
+                }
+            ];
+            
+            displayNotices(dummyNotices);
+        }
+
+        // 공지사항 표시
+        function displayNotices(notices) {
+            const container = document.getElementById('noticeList');
+            container.innerHTML = notices.map(notice => `
+                <div class="notice-item ${notice.isImportant ? 'important' : ''}">
+                    <div class="notice-header" onclick="toggleNotice(${notice.id})">
+                        <h4>${notice.isImportant ? '🔔 ' : ''}${notice.title}</h4>
+                        <span class="notice-date">${notice.date}</span>
+                        <span class="notice-toggle">+</span>
+                    </div>
+                    <div class="notice-content" id="notice-content-${notice.id}">
+                        <p>${notice.content}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 공지사항 토글
+        function toggleNotice(noticeId) {
+            const content = document.getElementById(`notice-content-${noticeId}`);
+            const toggle = content.previousElementSibling.querySelector('.notice-toggle');
+            
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+                toggle.textContent = '+';
+            } else {
+                content.style.display = 'block';
+                toggle.textContent = '-';
+            }
+        }
+
+        // 탭 전환
+        function showTab(tabName) {
+            // 모든 탭 비활성화
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // 선택된 탭 활성화
+            event.target.classList.add('active');
+            document.getElementById(`${tabName}-content`).classList.add('active');
+        }
+
+        // 문의 폼 설정
+        function setupContactForm() {
+            const form = document.getElementById('contactForm');
+            form.addEventListener('submit', handleContactSubmit);
+        }
+
+        // 문의 제출 처리
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const contactData = Object.fromEntries(formData.entries());
+            
+            // 문의 데이터 검증
+            if (!contactData.category || !contactData.title || !contactData.message || !contactData.email) {
+                alert('필수 항목을 모두 입력해주세요.');
+                return;
+            }
+            
+            if (!document.getElementById('contactAgree').checked) {
+                alert('개인정보 수집 및 이용에 동의해주세요.');
+                return;
+            }
+            
+            // 문의 제출
+            submitContact(contactData);
+        }
+
+        // 문의 제출
+        async function submitContact(contactData) {
+            try {
+                const response = await fetch('/api/support/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(contactData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('문의 제출에 실패했습니다.');
+                }
+                
+                alert('문의가 성공적으로 제출되었습니다. 빠른 시일 내에 답변드리겠습니다.');
+                document.getElementById('contactForm').reset();
+            } catch (error) {
+                console.error('문의 제출 실패:', error);
+                alert('문의 제출 중 오류가 발생했습니다. 다시 시도해주세요.');
+            }
+        }
+
+        // 사용자 인터페이스 초기화
+        function initUserInterface() {
+            try {
+                const currentUser = localStorage.getItem('currentUser');
+                if (currentUser) {
+                    const user = JSON.parse(currentUser);
+                    if (user && user.name) {
+                        updateUserInterface(user);
+                        
+                        // 문의 폼에 사용자 정보 자동 입력
+                        document.getElementById('contactEmail').value = user.email || '';
+                    }
+                }
+            } catch (error) {
+                console.warn('사용자 정보 로드 중 오류:', error);
+                localStorage.removeItem('currentUser');
+            }
+        }
+
+        // 사용자 인터페이스 업데이트
+        function updateUserInterface(user) {
+            if (!user || !user.name) {
+                console.warn('사용자 정보가 없습니다.');
+                return;
+            }
+            
+            const userMenu = document.querySelector('.user-menu');
+            if (userMenu) {
+                userMenu.innerHTML = `
+                    <span class="user-info">안녕하세요, ${user.name}님!</span>
+                    <button class="btn-logout" onclick="logout()">로그아웃</button>
+                    <button class="btn-admin" onclick="showAdminPanel()">관리자</button>
+                `;
+            }
+        }
+
+        // 로그아웃
+        function logout() {
+            localStorage.removeItem('currentUser');
+            location.reload();
+        }
+
+        // 모바일 메뉴 토글
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            if (mobileMenu.classList.contains('active')) {
+                closeMobileMenu();
+            } else {
+                mobileMenu.classList.add('active');
+                hamburger.classList.add('active');
+            }
+        }
+
+        // 모바일 메뉴 닫기
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            mobileMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+    </script>
+</body>
+</html>

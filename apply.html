@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>바우처 신청 - 기대플러스</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-text">기대플러스</div>
+                </div>
+                
+                <!-- 햄버거 메뉴 버튼 (모바일) -->
+                <button class="hamburger" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                
+                <!-- 데스크톱 네비게이션 -->
+                <nav class="nav desktop-nav">
+                    <ul>
+                        <li><a href="/">홈</a></li>
+                        <li><a href="/programs">바우처 사업</a></li>
+                        <li><a href="/apply" class="active">바우처 신청</a></li>
+                        <li><a href="/mypage">마이페이지</a></li>
+                        <li><a href="/support">고객지원</a></li>
+                    </ul>
+                </nav>
+                
+                <!-- 데스크톱 사용자 메뉴 -->
+                <div class="user-menu desktop-user-menu">
+                    <button class="btn-login" onclick="showLoginModal()">로그인</button>
+                    <button class="btn-register" onclick="showRegisterModal()">회원가입</button>
+                    <button class="btn-demo" onclick="demoLogin()">간편 로그인</button>
+                    <button class="btn-admin" onclick="showAdminPanel()" style="display: none;">관리자</button>
+                </div>
+            </div>
+            
+            <!-- 모바일 메뉴 -->
+            <div class="mobile-menu" id="mobileMenu">
+                <nav class="mobile-nav">
+                    <ul>
+                        <li><a href="/" onclick="closeMobileMenu()">홈</a></li>
+                        <li><a href="/programs" onclick="closeMobileMenu()">바우처 사업</a></li>
+                        <li><a href="/apply" onclick="closeMobileMenu()" class="active">바우처 신청</a></li>
+                        <li><a href="/mypage" onclick="closeMobileMenu()">마이페이지</a></li>
+                        <li><a href="/support" onclick="closeMobileMenu()">고객지원</a></li>
+                    </ul>
+                </nav>
+                <div class="mobile-user-menu">
+                    <button class="btn-login" onclick="showLoginModal(); closeMobileMenu();">로그인</button>
+                    <button class="btn-register" onclick="showRegisterModal(); closeMobileMenu();">회원가입</button>
+                    <button class="btn-demo" onclick="demoLogin(); closeMobileMenu();">간편 로그인</button>
+                    <button class="btn-admin" onclick="showAdminPanel(); closeMobileMenu();" style="display: none;">관리자</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- 바우처 신청 섹션 -->
+        <section class="apply-section">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="/">홈</a> > <a href="/programs">바우처 사업</a> > <span>바우처 신청</span>
+                </div>
+                
+                <div class="apply-content">
+                    <div class="apply-header">
+                        <h1>바우처 신청</h1>
+                        <p>원하는 바우처 사업을 선택하고 신청하세요</p>
+                    </div>
+                    
+                    <div class="apply-steps">
+                        <div class="step active" data-step="1">
+                            <div class="step-number">1</div>
+                            <div class="step-title">사업 선택</div>
+                        </div>
+                        <div class="step" data-step="2">
+                            <div class="step-number">2</div>
+                            <div class="step-title">정보 입력</div>
+                        </div>
+                        <div class="step" data-step="3">
+                            <div class="step-number">3</div>
+                            <div class="step-title">서류 제출</div>
+                        </div>
+                        <div class="step" data-step="4">
+                            <div class="step-number">4</div>
+                            <div class="step-title">신청 완료</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 1단계: 사업 선택 -->
+                    <div class="apply-step-content active" id="step-1">
+                        <h2>바우처 사업 선택</h2>
+                        <div class="program-selection">
+                            <div class="search-filter">
+                                <input type="text" id="programSearch" placeholder="사업명으로 검색..." onkeyup="filterPrograms()">
+                                <select id="categoryFilter" onchange="filterPrograms()">
+                                    <option value="">전체 카테고리</option>
+                                    <option value="education">교육</option>
+                                    <option value="healthcare">의료</option>
+                                    <option value="technology">기술</option>
+                                    <option value="business">사업</option>
+                                </select>
+                            </div>
+                            
+                            <div class="programs-grid" id="programsGrid">
+                                <!-- 프로그램 카드들이 여기에 동적으로 생성됩니다 -->
+                            </div>
+                        </div>
+                        
+                        <div class="step-actions">
+                            <button class="btn-primary" onclick="nextStep(2)" disabled id="nextStep1">다음 단계</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 2단계: 정보 입력 -->
+                    <div class="apply-step-content" id="step-2">
+                        <h2>신청자 정보 입력</h2>
+                        <form id="applicationForm" class="application-form">
+                            <div class="form-section">
+                                <h3>기본 정보</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="applicantName">이름 *</label>
+                                        <input type="text" id="applicantName" name="name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="applicantEmail">이메일 *</label>
+                                        <input type="email" id="applicantEmail" name="email" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="applicantPhone">휴대폰 번호 *</label>
+                                        <input type="tel" id="applicantPhone" name="phone" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="applicantBirth">생년월일 *</label>
+                                        <input type="date" id="applicantBirth" name="birthDate" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h3>주소 정보</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="applicantAddress">주소 *</label>
+                                        <input type="text" id="applicantAddress" name="address" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="applicantDetailAddress">상세주소</label>
+                                        <input type="text" id="applicantDetailAddress" name="detailAddress">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h3>소득 정보</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="applicantIncome">월 소득 *</label>
+                                        <select id="applicantIncome" name="income" required>
+                                            <option value="">선택하세요</option>
+                                            <option value="under-100">100만원 미만</option>
+                                            <option value="100-200">100-200만원</option>
+                                            <option value="200-300">200-300만원</option>
+                                            <option value="300-400">300-400만원</option>
+                                            <option value="over-400">400만원 이상</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="applicantJob">직업</label>
+                                        <input type="text" id="applicantJob" name="job">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h3>신청 동기</h3>
+                                <div class="form-group">
+                                    <label for="applicationReason">지원 동기 *</label>
+                                    <textarea id="applicationReason" name="reason" rows="5" required placeholder="바우처 사업에 지원하는 이유를 자세히 작성해주세요."></textarea>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <div class="step-actions">
+                            <button class="btn-secondary" onclick="prevStep(1)">이전 단계</button>
+                            <button class="btn-primary" onclick="nextStep(3)">다음 단계</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 3단계: 서류 제출 -->
+                    <div class="apply-step-content" id="step-3">
+                        <h2>필요 서류 제출</h2>
+                        <div class="documents-section">
+                            <div class="document-item">
+                                <div class="document-info">
+                                    <h4>신분증 사본</h4>
+                                    <p>주민등록증, 운전면허증, 여권 중 하나</p>
+                                </div>
+                                <div class="document-upload">
+                                    <input type="file" id="idDocument" accept="image/*,.pdf" onchange="handleFileUpload(this)">
+                                    <label for="idDocument" class="upload-btn">파일 선택</label>
+                                    <span class="file-name" id="idDocumentName"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="document-item">
+                                <div class="document-info">
+                                    <h4>소득 증명서</h4>
+                                    <p>소득금액증명원, 급여명세서 등</p>
+                                </div>
+                                <div class="document-upload">
+                                    <input type="file" id="incomeDocument" accept="image/*,.pdf" onchange="handleFileUpload(this)">
+                                    <label for="incomeDocument" class="upload-btn">파일 선택</label>
+                                    <span class="file-name" id="incomeDocumentName"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="document-item">
+                                <div class="document-info">
+                                    <h4>자기소개서</h4>
+                                    <p>지원 동기와 계획을 포함한 자기소개서</p>
+                                </div>
+                                <div class="document-upload">
+                                    <input type="file" id="selfIntroDocument" accept="image/*,.pdf,.doc,.docx" onchange="handleFileUpload(this)">
+                                    <label for="selfIntroDocument" class="upload-btn">파일 선택</label>
+                                    <span class="file-name" id="selfIntroDocumentName"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="step-actions">
+                            <button class="btn-secondary" onclick="prevStep(2)">이전 단계</button>
+                            <button class="btn-primary" onclick="nextStep(4)">다음 단계</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 4단계: 신청 완료 -->
+                    <div class="apply-step-content" id="step-4">
+                        <div class="completion-section">
+                            <div class="completion-icon">✅</div>
+                            <h2>신청이 완료되었습니다!</h2>
+                            <p>바우처 신청이 성공적으로 제출되었습니다.</p>
+                            
+                            <div class="application-summary">
+                                <h3>신청 요약</h3>
+                                <div class="summary-item">
+                                    <span class="label">선택한 사업:</span>
+                                    <span id="selectedProgramName">-</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">신청자:</span>
+                                    <span id="applicantNameSummary">-</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">신청일:</span>
+                                    <span id="applicationDate">-</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">신청 번호:</span>
+                                    <span id="applicationNumber">-</span>
+                                </div>
+                            </div>
+                            
+                            <div class="next-steps">
+                                <h3>다음 단계</h3>
+                                <ul>
+                                    <li>심사 결과는 신청 후 7-14일 내에 이메일로 안내됩니다.</li>
+                                    <li>추가 서류가 필요한 경우 개별 연락드립니다.</li>
+                                    <li>문의사항이 있으시면 고객지원센터로 연락해주세요.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="step-actions">
+                            <button class="btn-secondary" onclick="goToHome()">홈으로</button>
+                            <button class="btn-primary" onclick="goToMyPage()">마이페이지</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>기대플러스</h3>
+                    <p>바우처 플랫폼으로 더 나은 미래를 만들어갑니다.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>바우처 사업</h4>
+                    <ul>
+                        <li><a href="/programs">전체 사업</a></li>
+                        <li><a href="/programs?category=education">교육 분야</a></li>
+                        <li><a href="/programs?category=healthcare">의료 분야</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>고객지원</h4>
+                    <ul>
+                        <li><a href="/support">자주 묻는 질문</a></li>
+                        <li><a href="/support/contact">문의하기</a></li>
+                        <li><a href="/support/guide">이용 가이드</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 기대플러스. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="api-client.js"></script>
+    <script src="script.js"></script>
+    <script src="enhanced-features.js"></script>
+    <script>
+        let selectedProgram = null;
+        let applicationData = {};
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPrograms();
+            initUserInterface();
+            setupFormValidation();
+        });
+
+        // 프로그램 목록 로드
+        async function loadPrograms() {
+            try {
+                const response = await fetch('/api/programs');
+                if (!response.ok) {
+                    throw new Error('프로그램 목록을 불러올 수 없습니다.');
+                }
+                
+                const programs = await response.json();
+                displayPrograms(programs);
+            } catch (error) {
+                console.error('프로그램 목록 로드 실패:', error);
+                displayDummyPrograms();
+            }
+        }
+
+        // 더미 프로그램 데이터 표시
+        function displayDummyPrograms() {
+            const dummyPrograms = [
+                {
+                    id: 1,
+                    name: '디지털 스킬 업그레이드 바우처',
+                    category: 'education',
+                    description: '4차 산업혁명 시대에 필요한 디지털 스킬을 습득할 수 있는 바우처 사업입니다.',
+                    maxAmount: 100,
+                    status: 'active',
+                    startDate: '2024-01-01',
+                    endDate: '2024-12-31'
+                },
+                {
+                    id: 2,
+                    name: '건강관리 바우처',
+                    category: 'healthcare',
+                    description: '건강한 생활을 위한 의료비 지원 바우처입니다.',
+                    maxAmount: 50,
+                    status: 'active',
+                    startDate: '2024-01-01',
+                    endDate: '2024-12-31'
+                },
+                {
+                    id: 3,
+                    name: '창업 지원 바우처',
+                    category: 'business',
+                    description: '창업을 위한 교육 및 자금 지원 바우처입니다.',
+                    maxAmount: 200,
+                    status: 'active',
+                    startDate: '2024-01-01',
+                    endDate: '2024-12-31'
+                }
+            ];
+            displayPrograms(dummyPrograms);
+        }
+
+        // 프로그램 목록 표시
+        function displayPrograms(programs) {
+            const grid = document.getElementById('programsGrid');
+            grid.innerHTML = programs.map(program => `
+                <div class="program-card" onclick="selectProgram(${program.id})" data-program-id="${program.id}">
+                    <div class="program-card-header">
+                        <span class="program-category">${getCategoryName(program.category)}</span>
+                        <span class="program-status ${program.status}">${getStatusName(program.status)}</span>
+                    </div>
+                    <h3>${program.name}</h3>
+                    <p>${program.description}</p>
+                    <div class="program-card-footer">
+                        <span class="program-amount">최대 ${program.maxAmount}만원</span>
+                        <span class="program-period">${program.startDate} ~ ${program.endDate}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 카테고리명 변환
+        function getCategoryName(category) {
+            const categories = {
+                'education': '교육',
+                'healthcare': '의료',
+                'technology': '기술',
+                'business': '사업'
+            };
+            return categories[category] || category;
+        }
+
+        // 상태명 변환
+        function getStatusName(status) {
+            const statuses = {
+                'active': '진행중',
+                'upcoming': '예정',
+                'ended': '종료'
+            };
+            return statuses[status] || status;
+        }
+
+        // 프로그램 선택
+        function selectProgram(programId) {
+            // 이전 선택 해제
+            document.querySelectorAll('.program-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // 새 선택 적용
+            const selectedCard = document.querySelector(`[data-program-id="${programId}"]`);
+            selectedCard.classList.add('selected');
+            
+            // 선택된 프로그램 정보 저장
+            selectedProgram = {
+                id: programId,
+                name: selectedCard.querySelector('h3').textContent
+            };
+            
+            // 다음 단계 버튼 활성화
+            document.getElementById('nextStep1').disabled = false;
+        }
+
+        // 프로그램 필터링
+        function filterPrograms() {
+            const searchTerm = document.getElementById('programSearch').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            
+            document.querySelectorAll('.program-card').forEach(card => {
+                const programName = card.querySelector('h3').textContent.toLowerCase();
+                const programCategory = card.querySelector('.program-category').textContent;
+                
+                const matchesSearch = programName.includes(searchTerm);
+                const matchesCategory = !categoryFilter || programCategory === getCategoryName(categoryFilter);
+                
+                if (matchesSearch && matchesCategory) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // 단계 전환
+        function nextStep(stepNumber) {
+            // 현재 단계 비활성화
+            document.querySelectorAll('.apply-step-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // 새 단계 활성화
+            document.getElementById(`step-${stepNumber}`).classList.add('active');
+            document.querySelector(`[data-step="${stepNumber}"]`).classList.add('active');
+            
+            // 단계별 특별 처리
+            if (stepNumber === 2) {
+                fillUserInfo();
+            } else if (stepNumber === 4) {
+                completeApplication();
+            }
+        }
+
+        function prevStep(stepNumber) {
+            nextStep(stepNumber);
+        }
+
+        // 사용자 정보 자동 입력
+        function fillUserInfo() {
+            try {
+                const currentUser = localStorage.getItem('currentUser');
+                if (currentUser) {
+                    const user = JSON.parse(currentUser);
+                    document.getElementById('applicantName').value = user.name || '';
+                    document.getElementById('applicantEmail').value = user.email || '';
+                }
+            } catch (error) {
+                console.warn('사용자 정보 로드 실패:', error);
+            }
+        }
+
+        // 파일 업로드 처리
+        function handleFileUpload(input) {
+            const fileName = input.files[0]?.name || '';
+            const fileNameSpan = document.getElementById(input.id + 'Name');
+            fileNameSpan.textContent = fileName;
+        }
+
+        // 신청 완료 처리
+        function completeApplication() {
+            // 신청 데이터 수집
+            const formData = new FormData(document.getElementById('applicationForm'));
+            applicationData = Object.fromEntries(formData.entries());
+            applicationData.programId = selectedProgram.id;
+            applicationData.programName = selectedProgram.name;
+            applicationData.applicationDate = new Date().toLocaleDateString();
+            applicationData.applicationNumber = 'APP' + Date.now();
+            
+            // 요약 정보 표시
+            document.getElementById('selectedProgramName').textContent = selectedProgram.name;
+            document.getElementById('applicantNameSummary').textContent = applicationData.name;
+            document.getElementById('applicationDate').textContent = applicationData.applicationDate;
+            document.getElementById('applicationNumber').textContent = applicationData.applicationNumber;
+            
+            // 서버에 신청 데이터 전송
+            submitApplication();
+        }
+
+        // 신청 데이터 서버 전송
+        async function submitApplication() {
+            try {
+                const response = await fetch('/api/applications', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(applicationData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('신청 제출에 실패했습니다.');
+                }
+                
+                console.log('신청이 성공적으로 제출되었습니다.');
+            } catch (error) {
+                console.error('신청 제출 실패:', error);
+                // 오프라인 모드에서는 로컬 저장
+                localStorage.setItem('pendingApplication', JSON.stringify(applicationData));
+            }
+        }
+
+        // 폼 유효성 검사 설정
+        function setupFormValidation() {
+            const form = document.getElementById('applicationForm');
+            form.addEventListener('input', validateForm);
+        }
+
+        // 폼 유효성 검사
+        function validateForm() {
+            const requiredFields = form.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                }
+            });
+            
+            // 다음 단계 버튼 활성화/비활성화
+            const nextButton = document.querySelector('#step-2 .btn-primary');
+            if (nextButton) {
+                nextButton.disabled = !isValid;
+            }
+        }
+
+        // 홈으로 이동
+        function goToHome() {
+            window.location.href = '/';
+        }
+
+        // 마이페이지로 이동
+        function goToMyPage() {
+            window.location.href = '/mypage';
+        }
+
+        // 사용자 인터페이스 초기화
+        function initUserInterface() {
+            try {
+                const currentUser = localStorage.getItem('currentUser');
+                if (currentUser) {
+                    const user = JSON.parse(currentUser);
+                    if (user && user.name) {
+                        updateUserInterface(user);
+                    }
+                }
+            } catch (error) {
+                console.warn('사용자 정보 로드 중 오류:', error);
+                localStorage.removeItem('currentUser');
+            }
+        }
+
+        // 사용자 인터페이스 업데이트
+        function updateUserInterface(user) {
+            if (!user || !user.name) {
+                console.warn('사용자 정보가 없습니다.');
+                return;
+            }
+            
+            const userMenu = document.querySelector('.user-menu');
+            if (userMenu) {
+                userMenu.innerHTML = `
+                    <span class="user-info">안녕하세요, ${user.name}님!</span>
+                    <button class="btn-logout" onclick="logout()">로그아웃</button>
+                    <button class="btn-admin" onclick="showAdminPanel()">관리자</button>
+                `;
+            }
+        }
+
+        // 로그아웃
+        function logout() {
+            localStorage.removeItem('currentUser');
+            location.reload();
+        }
+
+        // 모바일 메뉴 토글
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            if (mobileMenu.classList.contains('active')) {
+                closeMobileMenu();
+            } else {
+                mobileMenu.classList.add('active');
+                hamburger.classList.add('active');
+            }
+        }
+
+        // 모바일 메뉴 닫기
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            mobileMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+    </script>
+</body>
+</html>
