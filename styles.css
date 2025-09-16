@@ -22,11 +22,12 @@ body {
 .header {
     background: #fff;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    position: fixed;
+    position: sticky;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
+    transition: all 0.3s ease;
 }
 
 .header-content {
@@ -34,6 +35,127 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1rem 0;
+    position: relative;
+}
+
+/* 햄버거 메뉴 버튼 */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+}
+
+.hamburger span {
+    width: 100%;
+    height: 3px;
+    background: #333;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* 모바일 메뉴 */
+.mobile-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-radius: 0 0 10px 10px;
+    overflow: hidden;
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.mobile-menu.active {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.mobile-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mobile-nav li {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.mobile-nav a {
+    display: block;
+    padding: 1rem 1.5rem;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s ease;
+}
+
+.mobile-nav a:hover {
+    background: #f8f9fa;
+    color: #2E7D32;
+}
+
+.mobile-user-menu {
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background: #f8f9fa;
+}
+
+.mobile-user-menu button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mobile-user-menu .btn-login {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.mobile-user-menu .btn-register {
+    background: #2E7D32;
+    color: white;
+}
+
+.mobile-user-menu .btn-demo {
+    background: #ff6b35;
+    color: white;
+}
+
+.mobile-user-menu .btn-admin {
+    background: #6c757d;
+    color: white;
 }
 
 .logo-text {
@@ -715,11 +837,1444 @@ section h2 {
     font-weight: 600;
 }
 
+/* 새로운 페이지들을 위한 스타일 */
+
+/* 바우처 사업 상세 페이지 */
+.program-detail {
+    padding: 2rem 0;
+}
+
+.breadcrumb {
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.breadcrumb a {
+    color: #2E7D32;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.program-detail-content {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.program-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.program-category {
+    background: #e8f5e8;
+    color: #2E7D32;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.program-status {
+    background: #4CAF50;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.program-info-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.program-image img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.program-description,
+.program-benefits {
+    margin-bottom: 2rem;
+}
+
+.program-description h3,
+.program-benefits h3 {
+    color: #2E7D32;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.program-benefits ul {
+    list-style: none;
+    padding: 0;
+}
+
+.program-benefits li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.program-benefits li:before {
+    content: "✓";
+    color: #4CAF50;
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+.program-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.application-box,
+.program-stats {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.application-box h3,
+.program-stats h3 {
+    color: #2E7D32;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.info-item .label {
+    font-weight: 600;
+    color: #666;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.stat-item {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.stat-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2E7D32;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.program-details-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    color: #666;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+    color: #2E7D32;
+    border-bottom-color: #2E7D32;
+}
+
+.tab-btn:hover {
+    color: #2E7D32;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+.tab-panel h3 {
+    color: #2E7D32;
+    margin-bottom: 1rem;
+}
+
+.tab-panel ul,
+.tab-panel ol {
+    padding-left: 1.5rem;
+}
+
+.tab-panel li {
+    margin-bottom: 0.5rem;
+}
+
+.faq-item {
+    margin-bottom: 1rem;
+}
+
+.faq-question {
+    background: #f8f9fa;
+    padding: 1rem;
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s ease;
+}
+
+.faq-question:hover {
+    background: #e9ecef;
+}
+
+.faq-question h4 {
+    margin: 0;
+    color: #333;
+}
+
+.faq-toggle {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2E7D32;
+}
+
+.faq-answer {
+    padding: 1rem;
+    background: white;
+    border: 1px solid #e9ecef;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    display: none;
+}
+
+.faq-meta {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* 바우처 신청 페이지 */
+.apply-section {
+    padding: 2rem 0;
+}
+
+.apply-content {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.apply-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.apply-header h1 {
+    color: #2E7D32;
+    margin-bottom: 1rem;
+}
+
+.apply-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.apply-steps::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #e9ecef;
+    z-index: 1;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    background: white;
+    padding: 0 1rem;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e9ecef;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.step.active .step-number {
+    background: #2E7D32;
+    color: white;
+}
+
+.step-title {
+    font-size: 0.9rem;
+    color: #666;
+    text-align: center;
+}
+
+.step.active .step-title {
+    color: #2E7D32;
+    font-weight: 600;
+}
+
+.apply-step-content {
+    display: none;
+}
+
+.apply-step-content.active {
+    display: block;
+}
+
+.program-selection {
+    margin-bottom: 2rem;
+}
+
+.search-filter {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.search-filter input,
+.search-filter select {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.programs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.program-card {
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.program-card:hover {
+    border-color: #2E7D32;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.1);
+}
+
+.program-card.selected {
+    border-color: #2E7D32;
+    background: #f8f9fa;
+}
+
+.program-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.program-category {
+    background: #e8f5e8;
+    color: #2E7D32;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.program-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.program-status.active {
+    background: #4CAF50;
+    color: white;
+}
+
+.program-card h3 {
+    color: #333;
+    margin-bottom: 0.75rem;
+    font-size: 1.2rem;
+}
+
+.program-card p {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.program-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.program-amount {
+    color: #2E7D32;
+    font-weight: 600;
+}
+
+.program-period {
+    color: #666;
+}
+
+.application-form {
+    margin-bottom: 2rem;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+}
+
+.form-section h3 {
+    color: #2E7D32;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #2E7D32;
+}
+
+.documents-section {
+    margin-bottom: 2rem;
+}
+
+.document-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.document-info h4 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.document-info p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.document-upload {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.document-upload input[type="file"] {
+    display: none;
+}
+
+.upload-btn {
+    background: #2E7D32;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+}
+
+.upload-btn:hover {
+    background: #1B5E20;
+}
+
+.file-name {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.completion-section {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.completion-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.completion-section h2 {
+    color: #2E7D32;
+    margin-bottom: 1rem;
+}
+
+.application-summary {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+    text-align: left;
+}
+
+.application-summary h3 {
+    color: #2E7D32;
+    margin-bottom: 1rem;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.summary-item .label {
+    font-weight: 600;
+    color: #666;
+}
+
+.next-steps {
+    text-align: left;
+    margin-top: 2rem;
+}
+
+.next-steps h3 {
+    color: #2E7D32;
+    margin-bottom: 1rem;
+}
+
+.next-steps ul {
+    padding-left: 1.5rem;
+}
+
+.next-steps li {
+    margin-bottom: 0.5rem;
+    color: #666;
+}
+
+.step-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* 마이페이지 스타일 */
+.mypage-section {
+    padding: 2rem 0;
+}
+
+.mypage-content {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.mypage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.profile-avatar img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-info h1 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.profile-info p {
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.profile-stats {
+    display: flex;
+    gap: 2rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-item strong {
+    display: block;
+    font-size: 1.5rem;
+    color: #2E7D32;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.mypage-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.vouchers-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.overview-card {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #e9ecef;
+}
+
+.overview-card h3 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.voucher-count {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #2E7D32;
+    margin-bottom: 0.5rem;
+}
+
+.overview-card p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.vouchers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.voucher-card {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.voucher-card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.voucher-card.active {
+    border-color: #4CAF50;
+}
+
+.voucher-card.used {
+    border-color: #6c757d;
+    opacity: 0.7;
+}
+
+.voucher-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.voucher-header h4 {
+    color: #333;
+    margin: 0;
+}
+
+.voucher-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.voucher-status.active {
+    background: #4CAF50;
+    color: white;
+}
+
+.voucher-status.used {
+    background: #6c757d;
+    color: white;
+}
+
+.voucher-amount {
+    margin-bottom: 1rem;
+}
+
+.total-amount {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2E7D32;
+}
+
+.used-amount {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.voucher-dates {
+    margin-bottom: 1rem;
+}
+
+.voucher-dates p {
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.applications-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.filter-options select {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.application-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.application-info h4 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.application-info p {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0.25rem 0;
+}
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.status-badge.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.approved {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-badge.rejected {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-badge.completed {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.usage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.date-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.date-filter input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.usage-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.summary-card {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #e9ecef;
+}
+
+.summary-card h4 {
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.amount {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2E7D32;
+}
+
+.usage-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.usage-info h4 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.usage-info p {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0.25rem 0;
+}
+
+.usage-amount {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #dc3545;
+}
+
+.notifications-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.notification-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.notification-item.unread {
+    background: #f8f9fa;
+    border-left: 4px solid #2E7D32;
+}
+
+.notification-item.read {
+    opacity: 0.7;
+}
+
+.notification-icon {
+    font-size: 1.5rem;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-content h4 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.notification-content p {
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.notification-date {
+    font-size: 0.9rem;
+    color: #999;
+}
+
+.mark-read-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.settings-sections {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.settings-section {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.settings-section h3 {
+    color: #2E7D32;
+    margin-bottom: 1.5rem;
+}
+
+.setting-item {
+    margin-bottom: 1.5rem;
+}
+
+.setting-item label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.setting-item input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.setting-item input[type="checkbox"] {
+    width: auto;
+    margin-right: 0.5rem;
+}
+
+/* 고객지원 페이지 스타일 */
+.support-section {
+    padding: 2rem 0;
+}
+
+.support-content {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.support-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.support-header h1 {
+    color: #2E7D32;
+    margin-bottom: 1rem;
+}
+
+.support-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.faq-search {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.faq-search input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.faq-categories {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.category-btn {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.category-btn.active,
+.category-btn:hover {
+    background: #2E7D32;
+    color: white;
+    border-color: #2E7D32;
+}
+
+.contact-form {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.contact-form h3 {
+    color: #2E7D32;
+    margin-bottom: 1.5rem;
+}
+
+.contact-info {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.contact-info h3 {
+    color: #2E7D32;
+    margin-bottom: 1.5rem;
+}
+
+.contact-methods {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.contact-method {
+    text-align: center;
+    padding: 1.5rem;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+}
+
+.contact-method h4 {
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.contact-method p {
+    color: #666;
+    margin: 0.5rem 0;
+}
+
+.guide-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.guide-section {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.guide-section h3 {
+    color: #2E7D32;
+    margin-bottom: 1.5rem;
+}
+
+.guide-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.guide-step {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.guide-step .step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #2E7D32;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.guide-step .step-content h4 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.guide-step .step-content p {
+    color: #666;
+    margin: 0;
+}
+
+.guide-content h4 {
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.guide-content ul,
+.guide-content ol {
+    padding-left: 1.5rem;
+}
+
+.guide-content li {
+    margin-bottom: 0.5rem;
+    color: #666;
+}
+
+.notice-item {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.notice-item.important {
+    border-left: 4px solid #2E7D32;
+}
+
+.notice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    cursor: pointer;
+    background: #f8f9fa;
+    transition: background 0.3s ease;
+}
+
+.notice-header:hover {
+    background: #e9ecef;
+}
+
+.notice-header h4 {
+    color: #333;
+    margin: 0;
+    flex: 1;
+}
+
+.notice-date {
+    color: #666;
+    font-size: 0.9rem;
+    margin-right: 1rem;
+}
+
+.notice-toggle {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2E7D32;
+}
+
+.notice-content {
+    padding: 1.5rem;
+    background: white;
+    display: none;
+}
+
+.notice-content p {
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
     .header-content {
         flex-direction: column;
         gap: 1rem;
+    }
+    
+    /* 새로운 페이지들의 모바일 스타일 */
+    .program-info-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .program-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .program-details-tabs {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .tab-btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .apply-steps {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .apply-steps::before {
+        display: none;
+    }
+    
+    .step {
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+    
+    .step-number {
+        margin-bottom: 0;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .search-filter {
+        flex-direction: column;
+    }
+    
+    .programs-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .step-actions {
+        flex-direction: column;
+    }
+    
+    .mypage-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .user-profile {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .profile-stats {
+        justify-content: center;
+    }
+    
+    .profile-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .mypage-tabs {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .vouchers-overview {
+        grid-template-columns: 1fr;
+    }
+    
+    .vouchers-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .applications-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .usage-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .usage-summary {
+        grid-template-columns: 1fr;
+    }
+    
+    .notifications-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .settings-sections {
+        grid-template-columns: 1fr;
+    }
+    
+    .support-tabs {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .faq-search {
+        flex-direction: column;
+    }
+    
+    .faq-categories {
+        justify-content: center;
+    }
+    
+    .contact-methods {
+        grid-template-columns: 1fr;
+    }
+    
+    .guide-step {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .notice-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .notice-date {
+        margin-right: 0;
     }
     
     .nav ul {
@@ -929,8 +2484,6 @@ section h2 {
     /* 헤더 모바일 최적화 */
     .header {
         padding: 0.75rem 1rem;
-        flex-direction: column;
-        gap: 0.75rem;
         position: sticky;
         top: 0;
         z-index: 1000;
@@ -938,60 +2491,33 @@ section h2 {
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
-    .logo {
+    .header-content {
+        padding: 0;
+    }
+    
+    /* 햄버거 메뉴 표시 */
+    .hamburger {
+        display: flex;
+    }
+    
+    /* 데스크톱 네비게이션 숨김 */
+    .desktop-nav {
+        display: none;
+    }
+    
+    .desktop-user-menu {
+        display: none;
+    }
+    
+    /* 모바일 메뉴 표시 */
+    .mobile-menu {
+        display: block;
+    }
+    
+    .logo-text {
         font-size: 1.3rem;
         font-weight: bold;
         color: #28a745;
-        text-align: center;
-    }
-    
-    .nav {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        justify-content: center;
-        width: 100%;
-    }
-    
-    .nav a {
-        padding: 0.5rem 0.75rem;
-        text-align: center;
-        font-size: 0.85rem;
-        border-radius: 20px;
-        background: #f8f9fa;
-        color: #495057;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        border: 1px solid #e9ecef;
-    }
-    
-    .nav a:hover {
-        background: #28a745;
-        color: white;
-        border-color: #28a745;
-    }
-    
-    .user-menu {
-        flex-direction: row;
-        gap: 0.5rem;
-        width: 100%;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-    
-    .user-menu button {
-        padding: 0.5rem 1rem;
-        font-size: 0.85rem;
-        border-radius: 20px;
-        border: 1px solid #28a745;
-        background: white;
-        color: #28a745;
-        transition: all 0.3s ease;
-    }
-    
-    .user-menu button:hover {
-        background: #28a745;
-        color: white;
     }
     
     /* 메인 컨텐츠 모바일 최적화 */

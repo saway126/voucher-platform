@@ -12,22 +12,7 @@ const PORT = process.env.PORT || 3000;
 
 // 미들웨어 설정
 app.use(helmet({
-    contentSecurityPolicy: {
-        directives: {
-            defaultSrc: ["'self'"],
-            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
-            styleSrcElem: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
-            scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
-            scriptSrcElem: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
-            scriptSrcAttr: ["'unsafe-inline'"],
-            imgSrc: ["'self'", "data:", "https:"],
-            connectSrc: ["'self'"],
-            fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
-            objectSrc: ["'none'"],
-            mediaSrc: ["'self'"],
-            frameSrc: ["'none'"],
-        },
-    },
+    contentSecurityPolicy: false
 }));
 
 app.use(compression());
@@ -65,10 +50,31 @@ app.use('/api/vouchers', require('./routes/vouchers'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/files', require('./routes/files'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/support', require('./routes/support'));
 
-// 기본 라우트
+// 페이지 라우트
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/programs', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/programs/:id', (req, res) => {
+    res.sendFile(path.join(__dirname, 'program-detail.html'));
+});
+
+app.get('/apply', (req, res) => {
+    res.sendFile(path.join(__dirname, 'apply.html'));
+});
+
+app.get('/mypage', (req, res) => {
+    res.sendFile(path.join(__dirname, 'mypage.html'));
+});
+
+app.get('/support', (req, res) => {
+    res.sendFile(path.join(__dirname, 'support.html'));
 });
 
 // 404 핸들러

@@ -513,8 +513,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 프로그램 필터 초기화
     initializeProgramFilters();
     
-    // 사용자 인터페이스 업데이트
-    updateUserInterface();
+    // 사용자 인터페이스 업데이트 (매개변수 없이 호출하지 않음)
+    // updateUserInterface는 index.html에서 정의됨
     
     // 마이페이지 업데이트
     updateMyPage();

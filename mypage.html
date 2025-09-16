@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지 - 기대플러스</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👤</text></svg>">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-text">기대플러스</div>
+                </div>
+                
+                <!-- 햄버거 메뉴 버튼 (모바일) -->
+                <button class="hamburger" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                
+                <!-- 데스크톱 네비게이션 -->
+                <nav class="nav desktop-nav">
+                    <ul>
+                        <li><a href="/">홈</a></li>
+                        <li><a href="/programs">바우처 사업</a></li>
+                        <li><a href="/apply">바우처 신청</a></li>
+                        <li><a href="/mypage" class="active">마이페이지</a></li>
+                        <li><a href="/support">고객지원</a></li>
+                    </ul>
+                </nav>
+                
+                <!-- 데스크톱 사용자 메뉴 -->
+                <div class="user-menu desktop-user-menu">
+                    <button class="btn-login" onclick="showLoginModal()">로그인</button>
+                    <button class="btn-register" onclick="showRegisterModal()">회원가입</button>
+                    <button class="btn-demo" onclick="demoLogin()">간편 로그인</button>
+                    <button class="btn-admin" onclick="showAdminPanel()" style="display: none;">관리자</button>
+                </div>
+            </div>
+            
+            <!-- 모바일 메뉴 -->
+            <div class="mobile-menu" id="mobileMenu">
+                <nav class="mobile-nav">
+                    <ul>
+                        <li><a href="/" onclick="closeMobileMenu()">홈</a></li>
+                        <li><a href="/programs" onclick="closeMobileMenu()">바우처 사업</a></li>
+                        <li><a href="/apply" onclick="closeMobileMenu()">바우처 신청</a></li>
+                        <li><a href="/mypage" onclick="closeMobileMenu()" class="active">마이페이지</a></li>
+                        <li><a href="/support" onclick="closeMobileMenu()">고객지원</a></li>
+                    </ul>
+                </nav>
+                <div class="mobile-user-menu">
+                    <button class="btn-login" onclick="showLoginModal(); closeMobileMenu();">로그인</button>
+                    <button class="btn-register" onclick="showRegisterModal(); closeMobileMenu();">회원가입</button>
+                    <button class="btn-demo" onclick="demoLogin(); closeMobileMenu();">간편 로그인</button>
+                    <button class="btn-admin" onclick="showAdminPanel(); closeMobileMenu();" style="display: none;">관리자</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- 마이페이지 섹션 -->
+        <section class="mypage-section">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="/">홈</a> > <span>마이페이지</span>
+                </div>
+                
+                <div class="mypage-content">
+                    <div class="mypage-header">
+                        <div class="user-profile">
+                            <div class="profile-avatar">
+                                <img src="https://via.placeholder.com/80x80/2E7D32/ffffff?text=👤" alt="프로필 이미지">
+                            </div>
+                            <div class="profile-info">
+                                <h1 id="userName">사용자님</h1>
+                                <p id="userEmail">user@example.com</p>
+                                <div class="profile-stats">
+                                    <span class="stat-item">
+                                        <strong id="totalApplications">0</strong> 신청
+                                    </span>
+                                    <span class="stat-item">
+                                        <strong id="activeVouchers">0</strong> 활성 바우처
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn-secondary" onclick="editProfile()">프로필 수정</button>
+                            <button class="btn-primary" onclick="goToApply()">새로 신청하기</button>
+                        </div>
+                    </div>
+                    
+                    <div class="mypage-tabs">
+                        <button class="tab-btn active" onclick="showTab('my-vouchers')">내 바우처</button>
+                        <button class="tab-btn" onclick="showTab('applications')">신청 내역</button>
+                        <button class="tab-btn" onclick="showTab('usage-history')">사용 내역</button>
+                        <button class="tab-btn" onclick="showTab('notifications')">알림</button>
+                        <button class="tab-btn" onclick="showTab('settings')">설정</button>
+                    </div>
+                    
+                    <!-- 내 바우처 탭 -->
+                    <div class="tab-content active" id="my-vouchers-content">
+                        <div class="vouchers-overview">
+                            <div class="overview-card">
+                                <h3>활성 바우처</h3>
+                                <div class="voucher-count" id="activeVoucherCount">0</div>
+                                <p>현재 사용 가능한 바우처</p>
+                            </div>
+                            <div class="overview-card">
+                                <h3>사용 완료</h3>
+                                <div class="voucher-count" id="usedVoucherCount">0</div>
+                                <p>이미 사용한 바우처</p>
+                            </div>
+                            <div class="overview-card">
+                                <h3>만료 예정</h3>
+                                <div class="voucher-count" id="expiringVoucherCount">0</div>
+                                <p>7일 내 만료 예정</p>
+                            </div>
+                        </div>
+                        
+                        <div class="vouchers-list">
+                            <h3>내 바우처 목록</h3>
+                            <div class="vouchers-grid" id="vouchersGrid">
+                                <!-- 바우처 카드들이 여기에 동적으로 생성됩니다 -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 신청 내역 탭 -->
+                    <div class="tab-content" id="applications-content">
+                        <div class="applications-header">
+                            <h3>신청 내역</h3>
+                            <div class="filter-options">
+                                <select id="applicationStatusFilter" onchange="filterApplications()">
+                                    <option value="">전체 상태</option>
+                                    <option value="pending">심사중</option>
+                                    <option value="approved">승인</option>
+                                    <option value="rejected">거절</option>
+                                    <option value="completed">완료</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="applications-list" id="applicationsList">
+                            <!-- 신청 내역이 여기에 동적으로 생성됩니다 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 사용 내역 탭 -->
+                    <div class="tab-content" id="usage-history-content">
+                        <div class="usage-header">
+                            <h3>사용 내역</h3>
+                            <div class="date-filter">
+                                <input type="date" id="startDate" onchange="filterUsageHistory()">
+                                <span>~</span>
+                                <input type="date" id="endDate" onchange="filterUsageHistory()">
+                            </div>
+                        </div>
+                        
+                        <div class="usage-summary">
+                            <div class="summary-card">
+                                <h4>총 사용 금액</h4>
+                                <div class="amount" id="totalUsedAmount">0원</div>
+                            </div>
+                            <div class="summary-card">
+                                <h4>이번 달 사용</h4>
+                                <div class="amount" id="monthlyUsedAmount">0원</div>
+                            </div>
+                        </div>
+                        
+                        <div class="usage-list" id="usageList">
+                            <!-- 사용 내역이 여기에 동적으로 생성됩니다 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 알림 탭 -->
+                    <div class="tab-content" id="notifications-content">
+                        <div class="notifications-header">
+                            <h3>알림</h3>
+                            <button class="btn-secondary" onclick="markAllAsRead()">모두 읽음</button>
+                        </div>
+                        
+                        <div class="notifications-list" id="notificationsList">
+                            <!-- 알림 목록이 여기에 동적으로 생성됩니다 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 설정 탭 -->
+                    <div class="tab-content" id="settings-content">
+                        <div class="settings-sections">
+                            <div class="settings-section">
+                                <h3>계정 설정</h3>
+                                <div class="setting-item">
+                                    <label for="userNameInput">이름</label>
+                                    <input type="text" id="userNameInput" value="">
+                                </div>
+                                <div class="setting-item">
+                                    <label for="userEmailInput">이메일</label>
+                                    <input type="email" id="userEmailInput" value="">
+                                </div>
+                                <div class="setting-item">
+                                    <label for="userPhoneInput">휴대폰 번호</label>
+                                    <input type="tel" id="userPhoneInput" value="">
+                                </div>
+                                <button class="btn-primary" onclick="updateProfile()">정보 수정</button>
+                            </div>
+                            
+                            <div class="settings-section">
+                                <h3>알림 설정</h3>
+                                <div class="setting-item">
+                                    <label>
+                                        <input type="checkbox" id="emailNotifications" checked>
+                                        이메일 알림 받기
+                                    </label>
+                                </div>
+                                <div class="setting-item">
+                                    <label>
+                                        <input type="checkbox" id="smsNotifications">
+                                        SMS 알림 받기
+                                    </label>
+                                </div>
+                                <div class="setting-item">
+                                    <label>
+                                        <input type="checkbox" id="marketingNotifications">
+                                        마케팅 정보 수신
+                                    </label>
+                                </div>
+                                <button class="btn-primary" onclick="updateNotificationSettings()">설정 저장</button>
+                            </div>
+                            
+                            <div class="settings-section">
+                                <h3>보안</h3>
+                                <button class="btn-secondary" onclick="changePassword()">비밀번호 변경</button>
+                                <button class="btn-secondary" onclick="deleteAccount()">계정 삭제</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>기대플러스</h3>
+                    <p>바우처 플랫폼으로 더 나은 미래를 만들어갑니다.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>바우처 사업</h4>
+                    <ul>
+                        <li><a href="/programs">전체 사업</a></li>
+                        <li><a href="/programs?category=education">교육 분야</a></li>
+                        <li><a href="/programs?category=healthcare">의료 분야</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>고객지원</h4>
+                    <ul>
+                        <li><a href="/support">자주 묻는 질문</a></li>
+                        <li><a href="/support/contact">문의하기</a></li>
+                        <li><a href="/support/guide">이용 가이드</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 기대플러스. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="api-client.js"></script>
+    <script src="script.js"></script>
+    <script src="enhanced-features.js"></script>
+    <script>
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+            loadUserData();
+            loadVouchers();
+            loadApplications();
+            loadUsageHistory();
+            loadNotifications();
+        });
+
+        // 로그인 상태 확인
+        function checkLoginStatus() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                alert('로그인이 필요합니다.');
+                window.location.href = '/';
+                return;
+            }
+        }
+
+        // 사용자 데이터 로드
+        function loadUserData() {
+            try {
+                const currentUser = localStorage.getItem('currentUser');
+                if (currentUser) {
+                    const user = JSON.parse(currentUser);
+                    document.getElementById('userName').textContent = user.name + '님';
+                    document.getElementById('userEmail').textContent = user.email;
+                    
+                    // 설정 탭의 입력 필드에도 값 설정
+                    document.getElementById('userNameInput').value = user.name || '';
+                    document.getElementById('userEmailInput').value = user.email || '';
+                    document.getElementById('userPhoneInput').value = user.phone || '';
+                }
+            } catch (error) {
+                console.error('사용자 데이터 로드 실패:', error);
+            }
+        }
+
+        // 바우처 데이터 로드
+        function loadVouchers() {
+            // 더미 바우처 데이터
+            const dummyVouchers = [
+                {
+                    id: 1,
+                    programName: '디지털 스킬 업그레이드 바우처',
+                    amount: 100000,
+                    usedAmount: 0,
+                    status: 'active',
+                    expiryDate: '2024-12-31',
+                    issueDate: '2024-01-15'
+                },
+                {
+                    id: 2,
+                    programName: '건강관리 바우처',
+                    amount: 50000,
+                    usedAmount: 30000,
+                    status: 'active',
+                    expiryDate: '2024-11-30',
+                    issueDate: '2024-02-01'
+                },
+                {
+                    id: 3,
+                    programName: '창업 지원 바우처',
+                    amount: 200000,
+                    usedAmount: 200000,
+                    status: 'used',
+                    expiryDate: '2024-10-15',
+                    issueDate: '2024-01-01'
+                }
+            ];
+            
+            displayVouchers(dummyVouchers);
+            updateVoucherStats(dummyVouchers);
+        }
+
+        // 바우처 목록 표시
+        function displayVouchers(vouchers) {
+            const grid = document.getElementById('vouchersGrid');
+            grid.innerHTML = vouchers.map(voucher => `
+                <div class="voucher-card ${voucher.status}">
+                    <div class="voucher-header">
+                        <h4>${voucher.programName}</h4>
+                        <span class="voucher-status ${voucher.status}">${getVoucherStatusName(voucher.status)}</span>
+                    </div>
+                    <div class="voucher-amount">
+                        <span class="total-amount">${voucher.amount.toLocaleString()}원</span>
+                        <span class="used-amount">사용: ${voucher.usedAmount.toLocaleString()}원</span>
+                    </div>
+                    <div class="voucher-dates">
+                        <p>발급일: ${voucher.issueDate}</p>
+                        <p>만료일: ${voucher.expiryDate}</p>
+                    </div>
+                    <div class="voucher-actions">
+                        ${voucher.status === 'active' ? 
+                            `<button class="btn-primary" onclick="useVoucher(${voucher.id})">사용하기</button>` : 
+                            `<button class="btn-secondary" disabled>사용 완료</button>`
+                        }
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 바우처 상태명 변환
+        function getVoucherStatusName(status) {
+            const statuses = {
+                'active': '사용 가능',
+                'used': '사용 완료',
+                'expired': '만료'
+            };
+            return statuses[status] || status;
+        }
+
+        // 바우처 통계 업데이트
+        function updateVoucherStats(vouchers) {
+            const activeCount = vouchers.filter(v => v.status === 'active').length;
+            const usedCount = vouchers.filter(v => v.status === 'used').length;
+            const expiringCount = vouchers.filter(v => {
+                const expiryDate = new Date(v.expiryDate);
+                const today = new Date();
+                const diffTime = expiryDate - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                return diffDays <= 7 && diffDays > 0;
+            }).length;
+            
+            document.getElementById('activeVoucherCount').textContent = activeCount;
+            document.getElementById('usedVoucherCount').textContent = usedCount;
+            document.getElementById('expiringVoucherCount').textContent = expiringCount;
+            document.getElementById('activeVouchers').textContent = activeCount;
+        }
+
+        // 신청 내역 로드
+        function loadApplications() {
+            const dummyApplications = [
+                {
+                    id: 1,
+                    programName: '디지털 스킬 업그레이드 바우처',
+                    applicationDate: '2024-01-10',
+                    status: 'approved',
+                    amount: 100000
+                },
+                {
+                    id: 2,
+                    programName: '건강관리 바우처',
+                    applicationDate: '2024-01-25',
+                    status: 'approved',
+                    amount: 50000
+                },
+                {
+                    id: 3,
+                    programName: '창업 지원 바우처',
+                    applicationDate: '2023-12-15',
+                    status: 'completed',
+                    amount: 200000
+                },
+                {
+                    id: 4,
+                    programName: '기술 교육 바우처',
+                    applicationDate: '2024-02-01',
+                    status: 'pending',
+                    amount: 150000
+                }
+            ];
+            
+            displayApplications(dummyApplications);
+            document.getElementById('totalApplications').textContent = dummyApplications.length;
+        }
+
+        // 신청 내역 표시
+        function displayApplications(applications) {
+            const list = document.getElementById('applicationsList');
+            list.innerHTML = applications.map(app => `
+                <div class="application-item">
+                    <div class="application-info">
+                        <h4>${app.programName}</h4>
+                        <p>신청일: ${app.applicationDate}</p>
+                        <p>지원 금액: ${app.amount.toLocaleString()}원</p>
+                    </div>
+                    <div class="application-status">
+                        <span class="status-badge ${app.status}">${getApplicationStatusName(app.status)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 신청 상태명 변환
+        function getApplicationStatusName(status) {
+            const statuses = {
+                'pending': '심사중',
+                'approved': '승인',
+                'rejected': '거절',
+                'completed': '완료'
+            };
+            return statuses[status] || status;
+        }
+
+        // 사용 내역 로드
+        function loadUsageHistory() {
+            const dummyUsage = [
+                {
+                    id: 1,
+                    voucherName: '창업 지원 바우처',
+                    amount: 200000,
+                    usageDate: '2024-01-15',
+                    description: '창업 교육 과정 수강료'
+                },
+                {
+                    id: 2,
+                    voucherName: '건강관리 바우처',
+                    amount: 30000,
+                    usageDate: '2024-02-10',
+                    description: '건강검진 비용'
+                }
+            ];
+            
+            displayUsageHistory(dummyUsage);
+            updateUsageStats(dummyUsage);
+        }
+
+        // 사용 내역 표시
+        function displayUsageHistory(usageHistory) {
+            const list = document.getElementById('usageList');
+            list.innerHTML = usageHistory.map(usage => `
+                <div class="usage-item">
+                    <div class="usage-info">
+                        <h4>${usage.voucherName}</h4>
+                        <p>${usage.description}</p>
+                        <p>사용일: ${usage.usageDate}</p>
+                    </div>
+                    <div class="usage-amount">
+                        -${usage.amount.toLocaleString()}원
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 사용 통계 업데이트
+        function updateUsageStats(usageHistory) {
+            const totalUsed = usageHistory.reduce((sum, usage) => sum + usage.amount, 0);
+            const thisMonth = usageHistory.filter(usage => {
+                const usageDate = new Date(usage.usageDate);
+                const now = new Date();
+                return usageDate.getMonth() === now.getMonth() && usageDate.getFullYear() === now.getFullYear();
+            }).reduce((sum, usage) => sum + usage.amount, 0);
+            
+            document.getElementById('totalUsedAmount').textContent = totalUsed.toLocaleString() + '원';
+            document.getElementById('monthlyUsedAmount').textContent = thisMonth.toLocaleString() + '원';
+        }
+
+        // 알림 로드
+        function loadNotifications() {
+            const dummyNotifications = [
+                {
+                    id: 1,
+                    title: '바우처 승인 알림',
+                    message: '디지털 스킬 업그레이드 바우처가 승인되었습니다.',
+                    date: '2024-01-15',
+                    isRead: false,
+                    type: 'approval'
+                },
+                {
+                    id: 2,
+                    title: '만료 예정 알림',
+                    message: '건강관리 바우처가 7일 후 만료됩니다.',
+                    date: '2024-01-10',
+                    isRead: false,
+                    type: 'expiry'
+                },
+                {
+                    id: 3,
+                    title: '새로운 사업 안내',
+                    message: '새로운 바우처 사업이 등록되었습니다.',
+                    date: '2024-01-05',
+                    isRead: true,
+                    type: 'info'
+                }
+            ];
+            
+            displayNotifications(dummyNotifications);
+        }
+
+        // 알림 표시
+        function displayNotifications(notifications) {
+            const list = document.getElementById('notificationsList');
+            list.innerHTML = notifications.map(notification => `
+                <div class="notification-item ${notification.isRead ? 'read' : 'unread'}">
+                    <div class="notification-icon">
+                        ${getNotificationIcon(notification.type)}
+                    </div>
+                    <div class="notification-content">
+                        <h4>${notification.title}</h4>
+                        <p>${notification.message}</p>
+                        <span class="notification-date">${notification.date}</span>
+                    </div>
+                    ${!notification.isRead ? 
+                        `<button class="mark-read-btn" onclick="markAsRead(${notification.id})">읽음</button>` : 
+                        ''
+                    }
+                </div>
+            `).join('');
+        }
+
+        // 알림 아이콘 반환
+        function getNotificationIcon(type) {
+            const icons = {
+                'approval': '✅',
+                'expiry': '⚠️',
+                'info': 'ℹ️'
+            };
+            return icons[type] || '📢';
+        }
+
+        // 탭 전환
+        function showTab(tabName) {
+            // 모든 탭 비활성화
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // 선택된 탭 활성화
+            event.target.classList.add('active');
+            document.getElementById(`${tabName}-content`).classList.add('active');
+        }
+
+        // 바우처 사용
+        function useVoucher(voucherId) {
+            if (confirm('바우처를 사용하시겠습니까?')) {
+                alert('바우처 사용 페이지로 이동합니다.');
+                // 실제로는 바우처 사용 페이지로 이동
+            }
+        }
+
+        // 신청 내역 필터링
+        function filterApplications() {
+            const statusFilter = document.getElementById('applicationStatusFilter').value;
+            // 필터링 로직 구현
+        }
+
+        // 사용 내역 필터링
+        function filterUsageHistory() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            // 날짜 필터링 로직 구현
+        }
+
+        // 알림 읽음 처리
+        function markAsRead(notificationId) {
+            // 알림 읽음 처리 로직
+            alert('알림을 읽음 처리했습니다.');
+        }
+
+        // 모든 알림 읽음 처리
+        function markAllAsRead() {
+            if (confirm('모든 알림을 읽음 처리하시겠습니까?')) {
+                alert('모든 알림을 읽음 처리했습니다.');
+            }
+        }
+
+        // 프로필 수정
+        function editProfile() {
+            showTab('settings');
+        }
+
+        // 프로필 업데이트
+        function updateProfile() {
+            const name = document.getElementById('userNameInput').value;
+            const email = document.getElementById('userEmailInput').value;
+            const phone = document.getElementById('userPhoneInput').value;
+            
+            if (!name || !email) {
+                alert('이름과 이메일은 필수 입력 항목입니다.');
+                return;
+            }
+            
+            // 프로필 업데이트 로직
+            alert('프로필이 업데이트되었습니다.');
+        }
+
+        // 알림 설정 업데이트
+        function updateNotificationSettings() {
+            alert('알림 설정이 저장되었습니다.');
+        }
+
+        // 비밀번호 변경
+        function changePassword() {
+            alert('비밀번호 변경 페이지로 이동합니다.');
+        }
+
+        // 계정 삭제
+        function deleteAccount() {
+            if (confirm('정말로 계정을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+                alert('계정 삭제 요청이 접수되었습니다.');
+            }
+        }
+
+        // 새로 신청하기
+        function goToApply() {
+            window.location.href = '/apply';
+        }
+
+        // 모바일 메뉴 토글
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            if (mobileMenu.classList.contains('active')) {
+                closeMobileMenu();
+            } else {
+                mobileMenu.classList.add('active');
+                hamburger.classList.add('active');
+            }
+        }
+
+        // 모바일 메뉴 닫기
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            mobileMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+    </script>
+</body>
+</html>
